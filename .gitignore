@@ -1,3 +1,4 @@
 .sdlc/
 .claude/settings.local.json
 .DS_Store
+.sdlc-kit/

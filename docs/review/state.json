@@ -333,5 +333,28 @@
     "CON": 9,
     "VER": 6
   },
-  "renderedAt": "2026-10-28T11:29:31.404Z"
+  "renderedAt": "2026-10-28T11:29:31.404Z",
+  "decisions": {
+    "cycle": 1,
+    "accepted": [
+      "F-01",
+      "F-02",
+      "F-03",
+      "F-04",
+      "F-05",
+      "F-06",
+      "F-07",
+      "F-10",
+      "F-11"
+    ],
+    "rejected": [
+      "F-08",
+      "F-09",
+      "F-12",
+      "F-13",
+      "F-14"
+    ],
+    "note": "Fix the six blocking ones and the three defects a user can see: the wrong empty message on a load error, the stale customer filter, and the #12 search. The stricter email rule is what I want, hand-edited data is out of scope for this build, the clickable orders in the customer view and the shared DOM helpers go to a later slice, and the CI pin is a repo chore I will do myself.",
+    "decidedAt": "2026-10-28T11:31:19.208Z"
+  }
 }

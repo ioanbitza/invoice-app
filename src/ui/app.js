@@ -11,12 +11,11 @@ const tabs = {
 };
 const loadResult = store.load();
 const locked = !loadResult.ok;
-const emptyState = { version: 1, nextOrderNumber: 1, customers: [], orders: [] };
 let activeTab = 'customers';
 
 // The views hold on to this object, so `state` is always read live from the store.
 const ctx = {
-  get state() { return store.current() ?? emptyState; },
+  get state() { return store.current(); },
   commit,
   rerender: render,
   showError,
@@ -33,19 +32,20 @@ function clearError() {
   banner.hidden = true;
 }
 
-function disableForms() {
-  for (const control of main.querySelectorAll('input, button, select, textarea')) {
-    control.disabled = true;
-  }
+function showLockedMessage() {
+  const message = document.createElement('p');
+  message.className = 'empty';
+  message.textContent = 'Your stored data could not be loaded, so nothing is shown. It has not been changed.';
+  main.replaceChildren(message);
 }
 
 function render() {
   for (const [name, tab] of Object.entries(tabs)) {
     tab.setAttribute('aria-pressed', String(name === activeTab));
   }
-  if (activeTab === 'orders') renderOrders(main, ctx);
+  if (locked) showLockedMessage();
+  else if (activeTab === 'orders') renderOrders(main, ctx);
   else renderCustomers(main, ctx);
-  if (locked) disableForms();
 }
 
 // Saves a successful domain result and re-renders. A failed domain result is

@@ -25,3 +25,4 @@ Run `python3 -m http.server 8000` and open http://localhost:8000.
 - [x] R-16: an order with lines €1,000.00 and €234.50 shows total €1,234.50; an order with no lines shows €0.00.
 - [x] R-20: with no orders the list says so and offers "New order"; an order with no lines says so and offers to add one.
 - [x] R-21: add a line described `<b>bold</b>`; it shows the tags literally.
+- [ ] R-18 (F-07): set `localStorage['invoice-app']` to `{bad` and reload; the banner shows and the main area says the stored data could not be loaded. It never says "No customers yet" or "No orders yet", on either tab, and there are no forms.

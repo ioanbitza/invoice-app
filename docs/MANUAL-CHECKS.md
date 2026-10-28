@@ -26,3 +26,4 @@ Run `python3 -m http.server 8000` and open http://localhost:8000.
 - [x] R-20: with no orders the list says so and offers "New order"; an order with no lines says so and offers to add one.
 - [x] R-21: add a line described `<b>bold</b>`; it shows the tags literally.
 - [ ] R-18 (F-07): set `localStorage['invoice-app']` to `{bad` and reload; the banner shows and the main area says the stored data could not be loaded. It never says "No customers yet" or "No orders yet", on either tab, and there are no forms.
+- [ ] R-10 (F-10): on Orders pick a customer in the filter, delete that customer on the Customers tab (they must have no orders), return to Orders; the filter shows "All customers" and the remaining orders are listed, not "No orders match your filter."

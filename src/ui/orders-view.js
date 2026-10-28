@@ -42,6 +42,7 @@ function customerSelect(ctx, withAll) {
 }
 
 function buildList(root, ctx) {
+  if (!ctx.state.customers.some((c) => c.id === view.customerId)) view.customerId = '';
   const section = el('section');
   section.append(el('h2', 'Orders'));
   const select = customerSelect(ctx, true);

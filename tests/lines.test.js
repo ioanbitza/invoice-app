@@ -85,6 +85,25 @@ test('R-13 edit keeps the line id and position and applies the same validation',
   assert.ok(bad.errors.description && bad.errors.quantity && bad.errors.unitPrice);
 });
 
+test('R-13 edit of the only line of an order succeeds', () => {
+  const state = stateWith([{ id: 'l1', description: 'A', quantity: 1, unitPriceCents: 100 }]);
+  const result = updateLine(state, 'o1', 'l1', { description: 'A2', quantity: '2', unitPrice: '1.00' });
+  assert.equal(result.ok, true);
+  assert.deepEqual(result.state.orders[0].lines, [{ id: 'l1', description: 'A2', quantity: 2, unitPriceCents: 100 }]);
+});
+
+test('R-13 edit of an unknown line on an order with lines is refused and changes nothing', () => {
+  const lines = [
+    { id: 'l1', description: 'A', quantity: 1, unitPriceCents: 100 },
+    { id: 'l2', description: 'B', quantity: 1, unitPriceCents: 200 },
+  ];
+  const state = stateWith(lines);
+  const result = updateLine(state, 'o1', 'nope', good);
+  assert.equal(result.ok, false);
+  assert.ok(result.errors.line);
+  assert.deepEqual(state.orders[0].lines, lines);
+});
+
 test('R-13 edit of an unknown line is refused', () => {
   const result = updateLine(stateWith(), 'o1', 'nope', good);
   assert.equal(result.ok, false);

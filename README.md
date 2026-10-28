@@ -48,8 +48,17 @@ The brief is [docs/BRIEF.md](docs/BRIEF.md). From there, seven commands of the k
 | 5 again | `/sdlc-kit:review-change --cycle 2` | cycle 2: `MERGE`; 209 planted defects, 206 caught, 3 judged equivalent |
 | 6 | `/sdlc-kit:ship` | [docs/TRACE.md](docs/TRACE.md) (every requirement to its tests, commits and manual check) and [docs/PR.md](docs/PR.md), the text of the pull request |
 | project skill | `/release-notes` | [docs/RELEASE-NOTES.md](docs/RELEASE-NOTES.md), written by a skill created in this repository during the build |
+| business and domain review | `/sdlc-kit:review-requirements` | [docs/REQUIREMENTS-REVIEW.md](docs/REQUIREMENTS-REVIEW.md): a product owner and a domain expert read the approved requirements, 24 items, 2 blocking, as checkboxes the human ticks; run after the build, so it is the starting point of the next iteration, not a change to this one |
 
 Who did what: requirements, plan and review on Opus; the code on Sonnet; the verifier on a model other than the author's; the verdict written by a script from what was measured. The human approved the requirements, answered the plan's questions in ADRs, ran the manual checks, accepted or rejected each finding, and opens the pull request. The AI never pushed, never created a branch, never touched a decision file; the hooks refuse those.
+
+## The business and the domain are files too
+
+The kit's first run on this app had only engineering roles. The roles a real team has beyond them were added afterwards and run on this repository as they are:
+
+- The domain knowledge is a project skill, [.claude/skills/domain-invoicing/SKILL.md](.claude/skills/domain-invoicing/SKILL.md): fifteen rules `D-01` to `D-15` on money in cents, rounding per line, orders versus invoices, immutable issued invoices, sequential numbering, the mandatory content of an invoice (Directive 2006/112/EC, article 226), customer data, retention, currency and dates. Each rule has a why and a primary source. The human signs it; after that no agent may change it.
+- [docs/REQUIREMENTS-REVIEW.md](docs/REQUIREMENTS-REVIEW.md) is what a product owner and a domain expert found when they read the approved requirements against the brief and those rules: 24 items, 2 blocking. Nothing is folded in yet. The human ticks the items to accept and they become the requirements of the next iteration, where `finder-domain` will also review the code against the same rules.
+- The UI rules the builder reads before a UI slice come from the kit's `ui-ux` skill, adapted from [UI UX Pro Max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) (MIT). This build predates that skill; the next iteration applies it.
 
 ## Read it in this order
 
@@ -60,6 +69,7 @@ Who did what: requirements, plan and review on Opus; the code on Sonnet; the ver
 5. [docs/REVIEW.md](docs/REVIEW.md): what the review found, what the verifier proved, and the verdict.
 6. [docs/review/1/decisions.json](docs/review/1/decisions.json): what the human decided and why.
 7. [docs/TRACE.md](docs/TRACE.md) and [docs/PR.md](docs/PR.md): the proof, requirement by requirement, and the open items.
+8. [.claude/skills/domain-invoicing/SKILL.md](.claude/skills/domain-invoicing/SKILL.md) and [docs/REQUIREMENTS-REVIEW.md](docs/REQUIREMENTS-REVIEW.md): the domain rules and what the business and domain roles found; the next iteration starts here.
 
 ## Open items
 

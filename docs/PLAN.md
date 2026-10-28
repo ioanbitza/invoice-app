@@ -1,6 +1,6 @@
 # Plan: invoice app
 
-Input: `docs/REQUIREMENTS.md` (Status: approved), `AGENTS.md`, ADR-001, ADR-002.
+Input: `docs/REQUIREMENTS.md` (Status: approved), `AGENTS.md`, ADR-001, ADR-002, ADR-003 (price input), ADR-004 (navigation).
 Order: domain (S1 to S4), storage (S5), UI (S6, S7). Each slice ends in something that can be tested.
 
 Shared design, so every slice builds against the same shapes:
@@ -18,6 +18,7 @@ Shared design, so every slice builds against the same shapes:
 - `R-12 parses "12.5" as 1250 cents`
 - `R-12 parses "0", "0.00" and "1000000.00" at the bounds`
 - `R-12 refuses "12.345" (three decimals)`
+- `R-12 refuses "12,50" and "1,000" with "Use a dot for decimals, e.g. 12.50"`
 - `R-12 refuses negative, above 1,000,000.00, empty and non-numeric input`
 - `R-15 line total is quantity times unit price in cents`
 - `R-15 line total stays exact for 9999 × 100000000 cents`
@@ -27,13 +28,13 @@ Shared design, so every slice builds against the same shapes:
 - `R-16 formats 0 as "€0.00" and 5 as "€0.05"`
 
 **Steps:**
-1. `parseEuros(text)` returns `{ ok: true, cents }` or `{ ok: false, error }`. It trims and matches `^\d+(\.\d{1,2})?$`, then builds cents from the integer and fraction strings, never with float multiplication.
+1. `parseEuros(text)` returns `{ ok: true, cents }` or `{ ok: false, error }`. A comma anywhere is refused with "Use a dot for decimals, e.g. 12.50" (ADR-003). Otherwise it trims and matches `^\d+(\.\d{1,2})?$`, then builds cents from the integer and fraction strings, never with float multiplication.
 2. `lineTotalCents(line)` returns `quantity * unitPriceCents`.
 3. `orderTotalCents(order)` sums `lineTotalCents` over `order.lines`.
 4. `formatEuros(cents)` builds `€` + thousands-grouped euros + `.` + two-digit cents, using integer division only.
 
 **Verify:** `node --test tests/money.test.js`
-**Risks:** whether "12,50" (comma as decimal separator) should be accepted is open, see D1. Until then it is refused with a message. The largest line total (9999 × 100,000,000) is about 1e12, well inside safe integers.
+**Risks:** the largest line total (9999 × 100,000,000) is about 1e12, well inside safe integers.
 
 ## S2 Customer rules (domain)
 **Goal:** create, validate, edit, delete-check, search and sort customers. **Covers:** R-01, R-02, R-03, R-05, R-06.
@@ -108,7 +109,7 @@ Shared design, so every slice builds against the same shapes:
 3. `removeLine(state, orderId, lineId)`.
 
 **Verify:** `node --test tests/lines.test.js`
-**Risks:** none known beyond D1.
+**Risks:** none known.
 
 ## S5 Store (storage)
 **Goal:** load and save the whole state under one key, never overwrite unreadable data, and report failed writes. **Covers:** R-17, R-18, R-19.
@@ -138,9 +139,9 @@ Shared design, so every slice builds against the same shapes:
 **Tests first:** UI is checked by hand (below). The rules it calls are already tested in S2, S3 and S5.
 
 **Steps:**
-1. `index.html` has two tabs (Customers, Orders), a main area, and an error banner region with `role="alert"`. It loads `src/ui/app.js` as a module.
+1. `index.html` has one page with two tabs (Customers, Orders), a main area, and an error banner region with `role="alert"`. It loads `src/ui/app.js` as a module.
 2. `app.js` creates the store and loads it. On a load error it shows the banner and disables all forms. It has one `commit(result)` that saves, re-renders on success, and shows the error on failure.
-3. `customers-view.js` renders the list with search, the empty and no-results messages, the add/edit form with messages next to the fields, the customer view with orders and totals, and delete through `confirm()` with the refusal message.
+3. `customers-view.js` renders the list with search, the empty and no-results messages, the add/edit form with messages next to the fields, the customer view with orders and totals, and delete through `confirm()` with the refusal message. A detail screen opens in the same page with a "Back" link to the list; there is no URL routing (ADR-004).
 4. All text goes in through `textContent` and `createElement`; no HTML strings.
 
 **Verify:** `node --test`; `python3 -m http.server 8000`, open http://localhost:8000. Manual checks for `docs/MANUAL-CHECKS.md`:
@@ -166,7 +167,7 @@ Shared design, so every slice builds against the same shapes:
 
 **Steps:**
 1. `orders-view.js` renders the order list with a customer select and a text filter, newest first. It has a "New order" action for a chosen customer with the date defaulting to today's local date, and a no-orders message.
-2. The order detail shows number, customer (read-only), an editable date, delete through `confirm()`, and the total.
+2. The order detail opens in the same page with a "Back" link (ADR-004) and shows number, customer (read-only), an editable date, delete through `confirm()`, and the total.
 3. `lines-view.js` shows the lines table with line totals, the add/edit form with messages next to the fields, remove, and a no-lines message.
 4. `app.js` wires the Orders tab and opening an order from the customer view.
 
@@ -176,7 +177,7 @@ Shared design, so every slice builds against the same shapes:
 - [ ] R-09: delete an order and confirm; it and its lines are gone. Create another; its number is not the deleted one.
 - [ ] R-10: filter by customer, then type part of an order number or a customer name in any case; only matches show. Clear both; all orders show, newest date first.
 - [ ] R-11: add a line "Design", 2, 12.5; it shows with unit price €12.50 and line total €25.00.
-- [ ] R-12: try quantity 1.5, price 12.345 and an empty description; each is refused with a message next to its field.
+- [ ] R-12: try quantity 1.5, price 12.345 and an empty description; each is refused with a message next to its field. Price 12,50 says "Use a dot for decimals, e.g. 12.50" and nothing is saved.
 - [ ] R-13: edit the line's quantity to 3; it updates in place and the total becomes €37.50.
 - [ ] R-14: remove the line; the order total drops at once.
 - [ ] R-15: a line of 3 × 0.10 shows €0.30 exactly.
@@ -191,12 +192,4 @@ Every MUST requirement is in a slice's Covers line: R-01 S2, S6 · R-02 S2, S6 �
 
 ## Decisions needed from the human
 
-D1. When someone types a price with a comma, like "12,50", what should happen?
-    Recommended: refuse it with the message "Use a dot for decimals, e.g. 12.50". Prices always mean the same thing, and the rule stays simple.
-    Alternative: read the comma as a decimal point. Friendlier for European typing, but "1,000" would become 1.00 instead of one thousand, so the thousands comma has to be refused instead.
-    Answer in: docs/decisions/ADR-003-price-input.md under "## Answered".
-
-D2. How do people move around the app?
-    Recommended: one page with two tabs, Customers and Orders. Opening a customer or an order shows its detail in the same page, with a "Back" link.
-    Alternative: a web address per screen (#/customers/…) so the browser Back button and bookmarks work. About one more small file and half a slice more of work.
-    Answer in: docs/decisions/ADR-004-navigation.md under "## Answered".
+none. D1 is answered in ADR-003: a comma in a price is refused (S1, S4, S7). D2 is answered in ADR-004: one page, two tabs, Back links, no routing (S6, S7).

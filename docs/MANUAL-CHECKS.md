@@ -13,3 +13,15 @@ Run `python3 -m http.server 8000` and open http://localhost:8000.
 - [ ] R-19: in DevTools fill storage until it is full (or override `Storage.prototype.setItem` to throw), then add a customer; an error shows and the customer is not in the list.
 - [ ] R-20: with no data, the customer list says there are no customers and offers "Add customer"; a search with no match says no customers match.
 - [ ] R-21: add a customer named `<img src=x onerror=alert(1)>`; the name shows literally and no alert appears.
+- [ ] R-07: create an order for Ana; it gets the next number, today's date and no lines.
+- [ ] R-08: change the order date and save; the new date shows. The customer has no edit control.
+- [ ] R-09: delete an order and confirm; it and its lines are gone. Create another; its number is not the deleted one.
+- [ ] R-10: filter by customer, then type part of an order number or a customer name in any case; only matches show. Clear both; all orders show, newest date first.
+- [ ] R-11: add a line "Design", 2, 12.5; it shows with unit price €12.50 and line total €25.00.
+- [ ] R-12: try quantity 1.5, price 12.345 and an empty description; each is refused with a message next to its field. Price 12,50 says "Use a dot for decimals, e.g. 12.50" and nothing is saved.
+- [ ] R-13: edit the line's quantity to 3; it updates in place and the total becomes €37.50.
+- [ ] R-14: remove the line; the order total drops at once.
+- [ ] R-15: a line of 3 × 0.10 shows €0.30 exactly.
+- [ ] R-16: an order with lines €1,000.00 and €234.50 shows total €1,234.50; an order with no lines shows €0.00.
+- [ ] R-20: with no orders the list says so and offers "New order"; an order with no lines says so and offers to add one.
+- [ ] R-21: add a line described `<b>bold</b>`; it shows the tags literally.

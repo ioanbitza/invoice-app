@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Invoice app</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Invoice app</h1>
+    <nav aria-label="Sections">
+      <button type="button" id="tab-customers" class="tab" aria-pressed="true">Customers</button>
+      <button type="button" id="tab-orders" class="tab" aria-pressed="false" hidden>Orders</button>
+    </nav>
+  </header>
+  <div id="banner" role="alert" hidden></div>
+  <main id="main"></main>
+  <script type="module" src="src/ui/app.js"></script>
+</body>
+</html>

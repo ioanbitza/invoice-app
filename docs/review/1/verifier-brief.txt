@@ -1,0 +1,6 @@
+Review cycle 1. Reviewed commit b00627a; scope main..HEAD (12 commits).
+Files in scope: .githooks/commit-msg, .githooks/pre-commit, .github/workflows/gate.yml, docs/MANUAL-CHECKS.md, docs/PLAN.md, docs/REQUIREMENTS.md, docs/decisions/ADR-003-price-input.md, docs/decisions/ADR-004-navigation.md, index.html, src/domain/customers.js, src/domain/lines.js, src/domain/money.js, src/domain/orders.js, src/storage/store.js, src/ui/app.js, src/ui/customers-view.js, src/ui/lines-view.js, src/ui/orders-view.js, styles.css, tests/customers.test.js, tests/lines.test.js, tests/money.test.js, tests/orders.test.js, tests/store.test.js.
+Finder findings: docs/review/1/findings.json (also the finder-*.json files there). Author model: sonnet. Your agent file says model opus; report the model you actually run on.
+Your own findings start at VER-1.
+Kit tools: node "/Users/ioanbita/sdlc-kit/tools/gate.mjs" runs the gate, node "/Users/ioanbita/sdlc-kit/tools/mutate.mjs" plants the defects.
+Return the JSON object and the Model:, Gate:, Mutations: lines, nothing else.

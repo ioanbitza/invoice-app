@@ -45,6 +45,18 @@ test('R-17 a saved state loads back equal after a new store is created on the sa
   assert.deepEqual(loaded.state, sample);
 });
 
+test('R-17 after loading existing data a save succeeds and a new store reads it back', () => {
+  const storage = fakeStorage({ [KEY]: JSON.stringify(sample) });
+  const store = createStore(storage);
+  assert.equal(store.load().ok, true);
+  const next = { ...sample, nextOrderNumber: 4 };
+  const saved = store.save(next);
+  assert.equal(saved.ok, true);
+  assert.deepEqual(store.current(), next);
+  assert.equal(storage.data[KEY], JSON.stringify(next));
+  assert.deepEqual(createStore(storage).load().state, next);
+});
+
 test('R-18 unparsable JSON loads as an error and the stored text is left unchanged', () => {
   const storage = fakeStorage({ [KEY]: '{bad' });
   const result = createStore(storage).load();

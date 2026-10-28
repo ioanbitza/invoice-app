@@ -101,6 +101,14 @@ test('R-05 delete refuses a customer with orders and reports how many', () => {
   assert.match(result.errors.orders, /deleted first/);
 });
 
+test('R-05 delete refuses a customer with exactly one order', () => {
+  const orders = [{ id: 'o1', number: 1, customerId: 'c1', date: '2026-01-01', lines: [] }];
+  const result = deleteCustomer(stateWith([ana], orders), 'c1');
+  assert.equal(result.ok, false);
+  assert.equal(result.orderCount, 1);
+  assert.match(result.errors.orders, /1 order\./);
+});
+
 test('R-05 delete removes a customer without orders', () => {
   const other = { id: 'c2', name: 'Bob', email: '', phone: '' };
   const result = deleteCustomer(stateWith([ana, other]), 'c1');

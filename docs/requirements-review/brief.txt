@@ -1,0 +1,8 @@
+Requirements review, run 1. File: docs/REQUIREMENTS.md (Status: approved, 25 requirements: R-01..R-25). Reviewed commit 2f04277.
+Read first: docs/BRIEF.md, AGENTS.md, docs/decisions/*.md; then docs/REQUIREMENTS.md.
+Domain skill: .claude/skills/domain-invoicing/SKILL.md (D-01, D-02, D-03, D-04, D-05, D-06, D-07, D-08, D-09, D-10, D-11, D-12, D-13, D-14, D-15). The domain expert reads it before the requirements and cites its rules as "rule": "D-nn".
+Return a JSON array of items and the Checklist: line, nothing else:
+[{"id":"PO-1","kind":"missing|wrong|priority|unclear|risk","severity":"blocking|advisory","requirement":"R-07 or none","title":"...","why":"...","suggested":"<the requirement or criterion text to add or change, in the file's own format>","proven":true}]
+product-owner: ids PO-1, PO-2, ...; checklist: 1 who uses the app and for what; 2 the main flows end to end: can a user get from start to the outcome without a dead end; 3 priorities: a MUST that is not needed for the first use, a LATER that blocks it; 4 acceptance criteria a user can observe, not implementation words; 5 empty, error and edge states of the business, not of the code; 6 what the brief implies and the requirements dropped.
+domain-expert: ids DOM-1, DOM-2, ... with "rule":"D-nn"; checklist, each requirement and the data model against every rule: 1 a rule the requirements break; 2 a rule the requirements ignore; 3 a term used wrongly; 4 a rounding or legal element missing.
+blocking means a user cannot complete a main flow, the requirement contradicts the brief, or it breaks a domain rule. proven: true only when "why" quotes the requirement or brief line and the rule or flow it fails.

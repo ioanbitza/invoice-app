@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: ioanbitza/sdlc-kit
-          ref: 6eb3ab91e898640b70a5414dda04f118b06b447b
+          ref: 853a93571ec76d64ff9841ae7e1f88ebd6e0b37b
           path: .sdlc-kit
 
       - uses: actions/setup-node@v4

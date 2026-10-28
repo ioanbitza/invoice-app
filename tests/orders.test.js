@@ -75,8 +75,14 @@ test('R-08 changes the order date and keeps the customer', () => {
 
 test('R-08 refuses a bad date or an unknown order', () => {
   const state = stateWith([order('o1', 1, 'c1', '2026-01-01')]);
-  assert.ok(updateOrderDate(state, 'o1', '2026-02-30').errors.date);
-  assert.ok(updateOrderDate(state, 'nope', '2026-01-01').errors.order);
+  const badDate = updateOrderDate(state, 'o1', '2026-02-30');
+  assert.equal(badDate.ok, false);
+  assert.ok(badDate.errors.date);
+  assert.equal(badDate.state, undefined);
+  const unknown = updateOrderDate(state, 'nope', '2026-01-01');
+  assert.equal(unknown.ok, false);
+  assert.ok(unknown.errors.order);
+  assert.equal(unknown.state, undefined);
 });
 
 test('R-09 deleting an order removes it with its lines', () => {
@@ -92,6 +98,23 @@ test('R-09 deleting an unknown order is refused', () => {
   const result = deleteOrder(stateWith([]), 'nope');
   assert.equal(result.ok, false);
   assert.ok(result.errors.order);
+});
+
+test('R-09 deleting the only order works and an unknown id is refused when orders exist', () => {
+  const only = deleteOrder(stateWith([order('o1', 1, 'c1', '2026-01-01')]), 'o1');
+  assert.equal(only.ok, true);
+  assert.deepEqual(only.state.orders, []);
+  const unknown = deleteOrder(stateWith([order('o1', 1, 'c1', '2026-01-01')]), 'nope');
+  assert.equal(unknown.ok, false);
+  assert.ok(unknown.errors.order);
+  assert.equal(unknown.state, undefined);
+});
+
+test('R-10 a search written as #12 finds order number 12', () => {
+  const state = stateWith([order('o1', 12, 'c1', '2026-01-01'), order('o2', 3, 'c2', '2026-01-02')]);
+  assert.deepEqual(filterOrders(state, { text: '#12' }).map((o) => o.id), ['o1']);
+  assert.deepEqual(filterOrders(state, { text: '#3' }).map((o) => o.id), ['o2']);
+  assert.deepEqual(filterOrders(state, { text: '#99' }), []);
 });
 
 test('R-10 filters by customer', () => {

@@ -51,7 +51,7 @@ export function filterOrders(state, { customerId = '', text = '' } = {}) {
   const nameOf = (id) => (state.customers.find((c) => c.id === id)?.name ?? '').toLowerCase();
   return state.orders
     .filter((o) => customerId === '' || o.customerId === customerId)
-    .filter((o) => needle === '' || String(o.number).includes(needle) || nameOf(o.customerId).includes(needle))
+    .filter((o) => needle === '' || `#${o.number}`.includes(needle) || nameOf(o.customerId).includes(needle))
     .sort(newestFirst);
 }
 

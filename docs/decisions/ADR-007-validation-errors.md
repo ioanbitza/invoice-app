@@ -1,6 +1,6 @@
 # ADR-007: Validation, text matching and errors
 
-Date: 2026-10-30. Status: accepted. Author: architect, accepted by Ioan Bita.
+Date: 2026-10-30. Status: accepted (2026-10-30, collator line aligned with ADR-003). Author: architect, accepted by Ioan Bita.
 Tags: javascript, browser, web-ui
 
 ## Context
@@ -40,7 +40,7 @@ A field error's `code` (for example `customer.name.length`) is for tests and is 
 
 ### Sorting and search
 - Search text and the searched fields both pass through `trim()` then `toLowerCase()`, then `includes` (R-05, R-10). `toLowerCase()` takes no locale, so the same input matches the same way in every browser.
-- The customer list and the picker use `Intl.Collator(locale, { sensitivity: 'accent' })`, with the locale as an argument, then `id` to keep equal names in a stable order (R-03). A Romanian name with `Ș` then sorts next to `S`, not after `z`.
+- The customer list and the picker sort with a compare function built once in `src/ui/format.js` from `Intl.Collator(locale, { sensitivity: 'accent' })` and passed to the domain list functions as a parameter (ADR-003, CRI-3), then `id` to keep equal names in a stable order (R-03). A Romanian name with `Ș` then sorts next to `S`, not after `z`.
 - The order list sorts by `date` as text, newest first, then by the numeric part of `number`, highest first (R-09). The number is compared as a number because `ORD-10000` must rank above `ORD-9999`.
 - Dates are displayed through `formatDate(isoDate, locale)` in `src/ui/format.js`, built with `Date.UTC` and formatted with `timeZone: 'UTC'`, so no time zone can shift the day.
 

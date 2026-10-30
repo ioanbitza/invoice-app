@@ -91,13 +91,14 @@ function screenFor(reason) {
 /**
  * The one write path (R-21, ADR-003): save first, change state only when the save worked.
  * With `hash` it then navigates and renders; without it the caller stays on its screen.
+ * `{ replace: true }` navigates with location.replace, so Back skips the screen that was left (ADR-005: deletes).
  */
-function commit(nextData, hash) {
+function commit(nextData, hash, { replace = false } = {}) {
   const saved = storage.save(nextData);
   if (!saved.ok) return { ok: false, code: SAVE_FAILURE_CODES[saved.reason] };
   state.data = nextData;
   if (state.route?.name === 'customer-new' || customerWasDeleted(nextData)) state.searchCustomers = '';
-  if (hash !== undefined) goTo(hash);
+  if (hash !== undefined) goTo(hash, replace);
   return { ok: true };
 }
 
@@ -107,9 +108,10 @@ function customerWasDeleted(nextData) {
   return route?.name === 'customer' && !nextData.customers.some((item) => item.id === route.id);
 }
 
-function goTo(hash) {
+function goTo(hash, replace) {
   state.form = null;
   if (location.hash === hash) render();
+  else if (replace) location.replace(hash);
   else location.hash = hash;
 }
 

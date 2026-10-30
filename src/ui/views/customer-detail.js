@@ -147,7 +147,7 @@ export function renderCustomerDetail(container, context) {
   });
 
   function confirmDelete(result) {
-    const saved = commit(result.data, routeToHash({ name: 'customers' }));
+    const saved = commit(result.data, routeToHash({ name: 'customers' }), { replace: true });
     if (!saved.ok) showBanner(saved.code);
   }
 

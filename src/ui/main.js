@@ -1,4 +1,5 @@
 import { openBrowserStorage } from '../storage/storage.js';
+import { todayIso } from '../domain/dates.js';
 import { createNameCompare } from './format.js';
 import { parseRoute, routeTitle } from './router.js';
 import { banner, bannerRegion, fillDialog, setBanner } from './views/components.js';
@@ -17,6 +18,26 @@ const CODES = Object.freeze({
   'STO-02': {
     variant: 'danger',
     text: "Your browser's storage is unavailable, so this was not saved. Allow storage for this site, or delete data to free space, then try again. (STO-02)",
+    screen: {
+      title: 'Browser storage cannot be used',
+      text: "Your browser's storage is unavailable. Allow storage for this site, then reload the page. (STO-02)",
+    },
+  },
+  'STO-03': {
+    variant: 'danger',
+    text: 'The saved data cannot be read. (STO-03)',
+    screen: {
+      title: 'The saved data cannot be read',
+      text: 'Nothing has been changed. Copy the stored text to keep it, or start with empty data. (STO-03)',
+    },
+  },
+  'STO-04': {
+    variant: 'danger',
+    text: 'The saved data is from a newer version of the app. (STO-04)',
+    screen: {
+      title: 'This data is from a newer version',
+      text: 'It was saved by a newer version of the app, and nothing has been changed. Copy the stored text to keep it, or start with empty data. (STO-04)',
+    },
   },
   'STO-05': {
     variant: 'danger',
@@ -31,6 +52,9 @@ const CODES = Object.freeze({
 });
 
 const SAVE_FAILURE_CODES = Object.freeze({ quota: 'STO-01', unavailable: 'STO-02', blocked: 'STO-05' });
+const LOAD_FAILURE_CODES = Object.freeze({ corrupt: 'STO-03', newer: 'STO-04', unavailable: 'STO-02' });
+const FORM_ROUTES = Object.freeze(['customer-new', 'customer-edit', 'order-new', 'customer-order-new', 'order-edit']);
+const FIRST_FIELD = 'input:not([type="hidden"]):not([readonly]):not([disabled]), select:not([disabled]), textarea:not([readonly]):not([disabled])';
 const BLOCKED_TITLE = 'Data problem - Invoice app';
 
 const storage = openBrowserStorage();
@@ -46,18 +70,39 @@ let renderedHash = null;
 /** Screens by route name; a route with no screen yet renders the not-found screen. */
 const SCREENS = { customers: renderCustomerList, customer: renderCustomerDetail, 'customer-new': renderCustomerForm, 'customer-edit': renderCustomerForm, orders: renderOrderList,
   'order-new': renderOrderForm, 'customer-order-new': renderOrderForm, 'order-edit': renderOrderForm, order: renderOrderView };
-const deps = { newId: () => crypto.randomUUID(), now: () => Date.now() };
+/** `today` is read on every use, so a page left open past midnight does not keep yesterday (ADR-003, ADR-007). `now` stays for views that still read the clock. */
+const deps = {
+  newId: () => crypto.randomUUID(),
+  now: () => Date.now(),
+  get today() {
+    return todayIso(() => Date.now());
+  },
+};
 
 function bannerFor(code) {
   return CODES[code];
 }
 
-/** The one write path (R-21): save first, change state only when the save worked. */
-function commit(nextData) {
+function screenFor(reason) {
+  return CODES[LOAD_FAILURE_CODES[reason]].screen;
+}
+
+/**
+ * The one write path (R-21, ADR-003): save first, change state only when the save worked.
+ * With `hash` it then navigates and renders; without it the caller stays on its screen.
+ */
+function commit(nextData, hash) {
   const saved = storage.save(nextData);
   if (!saved.ok) return { ok: false, code: SAVE_FAILURE_CODES[saved.reason] };
   state.data = nextData;
+  if (hash !== undefined) goTo(hash);
   return { ok: true };
+}
+
+function goTo(hash) {
+  state.form = null;
+  if (location.hash === hash) render();
+  else location.hash = hash;
 }
 
 function showBanner(code) {
@@ -141,7 +186,7 @@ function markNav(route) {
 function renderBlockedScreen() {
   header.hidden = true;
   document.title = BLOCKED_TITLE;
-  return renderBlocked(mainElement, state.blocked, { startEmpty, bannerFor });
+  return renderBlocked(mainElement, state.blocked, { startEmpty, bannerFor, screenFor });
 }
 
 function renderRoute() {
@@ -153,13 +198,27 @@ function renderRoute() {
   document.title = routeTitle(route);
   state.form = null;
   const screen = SCREENS[route.name] ?? renderNotFound;
-  return screen(mainElement, { route, state, compareNames, commit, openDialog, bannerRegion, eraseAll, showBanner, deps });
+  const h1 = screen(mainElement, { route, state, compareNames, commit, openDialog, bannerRegion, eraseAll, showBanner, deps });
+  if (h1.dataset.screen === 'not-found') showAsNotFound();
+  return h1;
+}
+
+/** A screen that found no record renders not-found itself; the title and the nav follow it (R-28, UI-SPEC 7.7). */
+function showAsNotFound() {
+  state.route = { name: 'not-found' };
+  markNav(state.route);
+  document.title = routeTitle(state.route);
+}
+
+function focusStart(h1) {
+  const field = FORM_ROUTES.includes(state.route?.name) ? mainElement.querySelector(FIRST_FIELD) : null;
+  (field ?? h1).focus();
 }
 
 function render() {
   renderedHash = location.hash;
-  const h1 = state.blocked ? renderBlockedScreen() : renderRoute();
-  h1.focus();
+  if (state.blocked) renderBlockedScreen().focus();
+  else focusStart(renderRoute());
 }
 
 function askToDiscard(form) {

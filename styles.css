@@ -183,6 +183,7 @@ p { margin: 0; }
   width: 100%;
 }
 
+.button { transition: transform var(--duration-fast) var(--easing); }
 .button:active { transform: translateY(var(--press-offset)); }
 
 .button-primary { background: var(--color-primary); color: var(--color-primary-text); }
@@ -261,7 +262,7 @@ p { margin: 0; }
   animation: banner-in var(--duration-base) var(--easing);
 }
 
-.banner-text { flex: 1 1 12rem; overflow-wrap: anywhere; }
+.banner-text { flex: 1; min-width: 0; overflow-wrap: anywhere; }
 
 .banner-info { background: var(--color-info-bg); border-color: var(--color-primary); }
 .banner-info .icon { color: var(--color-primary); }
@@ -311,7 +312,7 @@ form { display: flex; flex-direction: column; gap: var(--space-4); }
 }
 
 textarea { height: auto; padding: var(--space-2) var(--space-3); }
-input:focus, select:focus, textarea:focus { border-color: var(--color-primary); }
+input:focus:not([readonly]), select:focus, textarea:focus:not([readonly]) { border-color: var(--color-primary); }
 [aria-invalid="true"] { border-color: var(--color-danger); }
 [readonly] { background: var(--color-bg); }
 input.mono { font-family: var(--font-mono); }
@@ -363,7 +364,7 @@ dialog {
   animation: dialog-in var(--duration-base) var(--easing);
 }
 
-dialog::backdrop { background: var(--color-backdrop); }
+dialog::backdrop { background: var(--color-backdrop); animation: dialog-in var(--duration-base) var(--easing); }
 dialog h2 { margin-bottom: var(--space-3); }
 dialog p { overflow-wrap: anywhere; }
 
@@ -392,10 +393,10 @@ dialog p { overflow-wrap: anywhere; }
   font-size: var(--text-sm);
   color: var(--color-text-muted);
 }
-.panel-table { padding: 0; gap: 0; overflow: hidden; }
+.panel-table { padding: 0; gap: 0; overflow: clip; }
 .cell-muted { color: var(--color-text-muted); }
-.row-open { color: var(--color-text); font-weight: var(--weight-bold); text-decoration: none; overflow-wrap: anywhere; }
-.row-open:hover { text-decoration: underline; }
+.row-open { color: var(--color-primary); font-weight: var(--weight-bold); text-decoration: underline; overflow-wrap: anywhere; }
+.row-open:hover { color: var(--color-primary-hover); }
 .data-note { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-3); }
 .note-text { font-size: var(--text-sm); color: var(--color-text-muted); overflow-wrap: anywhere; }
 
@@ -442,6 +443,7 @@ dialog p { overflow-wrap: anywhere; }
   .table-customers .col-name { width: 40%; }
   .table-customers .col-email { width: 60%; }
   .table-customers .row-open { overflow-wrap: normal; }
+  .row-open { font-weight: var(--weight-normal); }
 }
 
 /* Customer detail */

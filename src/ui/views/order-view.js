@@ -214,6 +214,7 @@ export function renderOrderView(container, context) {
   function drawLines() {
     const now = currentOrder();
     addButton.disabled = ui.open;
+    deleteButton.disabled = ui.open;
     addButton.hidden = now.lines.length === 0;
     linesHolder.replaceChildren(linesPanel(now.lines, locale, ui));
     totalHolder.replaceChildren(totalLine(now, locale));

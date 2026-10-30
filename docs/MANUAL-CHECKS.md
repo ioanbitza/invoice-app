@@ -4,6 +4,15 @@
 - [ ] R-16: in a browser set to Romanian, open a screen with an amount (from S12), it shows 1.234,50 € rather than €1,234.50
 - [ ] R-31: open a route with a made-up id, the URL shows the id only and the page title holds no record data
 - [ ] UX: keyboard only, from the first field to the outcome, focus visible at every step
+- [ ] UX: 200% browser zoom, nothing cut off, no horizontal scroll
+- [ ] UX: contrast 4.5:1 on text, 3:1 on large text and borders (browser devtools)
+- [ ] UX: empty states: an empty list and an empty form say what to do
+- [ ] UX: a validation error appears next to its field and says how to fix it
+- [ ] UX: 320 px wide, every screen of the slice, no horizontal scroll
+- [ ] UX: design tokens only: no raw color, size or spacing outside :root in styles.css (grep for "#", "rgb(", "px" outside the token block)
+- [ ] UX: every button, link, input and tab shows hover, focus-visible, active and disabled as docs/UI-SPEC.md describes
+- [ ] UX: type and spacing scales respected: every font-size and every margin, padding and gap is a token
+- [ ] UX: each screen of the slice matches its sketch in docs/UI-SPEC.md at 320 px and at desktop width
 
 ## S9
 - [ ] R-20: put invalid JSON under the invoice-app key and reload, the blocked screen shows, no list and no nav, the stored text is unchanged
@@ -66,6 +75,8 @@
 - [ ] UX: every button, link, input and tab shows hover, focus-visible, active and disabled as docs/UI-SPEC.md describes
 - [ ] UX: type and spacing scales respected: every font-size and every margin, padding and gap is a token
 - [ ] UX: each screen of the slice matches its sketch in docs/UI-SPEC.md at 320 px and at desktop width
+- [ ] UX: customer form: Save with a bad email and an empty name, both errors show, focus lands on Name, nothing is saved
+- [ ] UX: leaving a form: type in a form, click Orders, then Keep editing: the text is still there; repeat with the browser's Back
 
 ## S12
 - [ ] R-03: the detail shows all fields and the customer's orders with their totals
@@ -113,7 +124,7 @@
 - [ ] R-12: change a line's quantity and price, the order total updates at once; an invalid edit leaves the old values
 - [ ] R-13: Remove takes the line out at once and the total falls
 - [ ] R-17: Cancel closes the line form, discards what was typed, and the saved line stays
-- [ ] R-18: with no lines, the message shows and Add line opens the form
+- [ ] R-18: from the no-lines message, Add line opens the form
 - [ ] R-21: fill localStorage until saving a line fails, the form stays open with what was typed and shows STO-01; a failed Remove keeps the line and shows the banner
 - [ ] R-22: add a line described <b>x</b>, it shows literally
 - [ ] R-28: from the order view the user can edit the order, add, edit and remove lines, and delete the order
@@ -165,3 +176,4 @@
 - [ ] UX: every button, link, input and tab shows hover, focus-visible, active and disabled as docs/UI-SPEC.md describes
 - [ ] UX: type and spacing scales respected: every font-size and every margin, padding and gap is a token
 - [ ] UX: each screen of the slice matches its sketch in docs/UI-SPEC.md at 320 px and at desktop width
+- [ ] UX: order list: with no customers only the "Add a customer first" message shows; with customers, Back from an order keeps the search

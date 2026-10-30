@@ -1,0 +1,37 @@
+name: pages
+
+on:
+  push:
+    branches: [__DEFAULT_BRANCH__]
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Collect the static files (no build step; the kit's documents, tests and settings stay out)
+        run: |
+          mkdir -p "$RUNNER_TEMP/site"
+          rsync -a --exclude .git/ --exclude docs/ --exclude tests/ --exclude .github/ --exclude .githooks/ --exclude .sdlc/ --exclude .claude/ ./ "$RUNNER_TEMP/site/"
+
+      - uses: actions/configure-pages@v6
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: ${{ runner.temp }}/site
+
+      - id: deployment
+        uses: actions/deploy-pages@v5

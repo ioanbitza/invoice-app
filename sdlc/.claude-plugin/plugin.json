@@ -1,0 +1,19 @@
+{
+  "name": "sdlc",
+  "version": "1.0.0",
+  "description": "Numbered requirements reviewed by a product owner, a domain expert and a legal role, proposed ADRs and a design contract the human accepts, a sliced plan judged by a critic, acceptance tests before the code, test-first slices on a cheap model, a finder review with a defect-planting verifier, one gate script run by hooks, git hooks and CI.",
+  "author": {
+    "name": "Ioan Bita"
+  },
+  "repository": "https://github.com/ioanbitza/invoice-app",
+  "license": "MIT",
+  "keywords": [
+    "sdlc",
+    "requirements",
+    "gates",
+    "traceability",
+    "hooks",
+    "review",
+    "mutation-testing"
+  ]
+}

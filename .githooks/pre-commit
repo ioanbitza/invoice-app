@@ -1,0 +1,4 @@
+#!/bin/sh
+# pre-commit: runs the one gate on the staged files (tests, scope, trace, commit message).
+# Once per clone: git config core.hooksPath .githooks
+exec node sdlc/tools/gate.mjs --staged

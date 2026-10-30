@@ -1,0 +1,4 @@
+#!/bin/sh
+# commit-msg: the subject must look like `S<n>: what changed (R-xx, R-yy)` with IDs from docs/REQUIREMENTS.md.
+# A docs-only commit with no active slice may use any message. Same check as the Claude commit hook.
+exec node sdlc/tools/gate.mjs --staged --only commit --message-file "$1"

@@ -556,3 +556,71 @@ dialog p { overflow-wrap: anywhere; }
   .table-order-list .col-date { width: 20%; color: var(--color-text); }
   .table-order-list .col-total { width: 20%; text-align: right; }
 }
+
+/* Order view */
+.text-link { color: var(--color-primary); text-decoration: underline; overflow-wrap: anywhere; }
+.text-link:hover { color: var(--color-primary-hover); }
+
+.table-lines,
+.table-lines tbody,
+.table-lines td { display: block; }
+.table-lines thead {
+  position: absolute;
+  width: var(--border-width);
+  height: var(--border-width);
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.table-lines tr {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  height: auto;
+  min-height: var(--row-height-touch);
+  padding: var(--space-3);
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+.table-lines td { padding: 0; border: 0; overflow-wrap: anywhere; }
+.table-lines .col-description { font-weight: var(--weight-bold); }
+.table-lines td[data-label] { display: flex; justify-content: space-between; gap: var(--space-3); }
+.table-lines td[data-label]::before { content: attr(data-label); color: var(--color-text-muted); font-weight: var(--weight-normal); }
+.table-lines .col-actions:empty { display: none; }
+
+.order-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+.order-total-label { font-size: var(--text-lg); font-weight: var(--weight-bold); }
+.order-total-amount { font-size: var(--text-xl); font-weight: var(--weight-bold); font-variant-numeric: tabular-nums; }
+
+@media (min-width: 64rem) {
+  .table-lines { display: table; table-layout: fixed; }
+  .table-lines thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    display: table-header-group;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
+  }
+  .table-lines tbody { display: table-row-group; }
+  .table-lines tr { display: table-row; height: var(--row-height); min-height: 0; padding: 0; border-bottom: 0; }
+  .table-lines td {
+    display: table-cell;
+    padding: var(--space-2) var(--space-3);
+    border-bottom: var(--border-width) solid var(--color-border);
+  }
+  .table-lines td[data-label]::before { content: none; }
+  .table-lines .col-actions:empty { display: table-cell; }
+  .table-lines .col-description { width: 30%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: var(--weight-normal); }
+  .table-lines .col-quantity { width: 10%; }
+  .table-lines .col-price { width: 18%; }
+  .table-lines .col-line-total { width: 20%; }
+  .table-lines .col-actions { width: 22%; }
+}

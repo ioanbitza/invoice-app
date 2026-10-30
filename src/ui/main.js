@@ -9,6 +9,7 @@ import { renderCustomerList } from './views/customer-list.js';
 import { renderNotFound } from './views/not-found.js';
 import { renderOrderForm } from './views/order-form.js';
 import { renderOrderList } from './views/order-list.js';
+import { renderOrderView } from './views/order-view.js';
 
 /** The texts a user sees with a code (ADR-007). Failure texts end with the code. */
 const CODES = Object.freeze({
@@ -44,7 +45,7 @@ let renderedHash = null;
 
 /** Screens by route name; a route with no screen yet renders the not-found screen. */
 const SCREENS = { customers: renderCustomerList, customer: renderCustomerDetail, 'customer-new': renderCustomerForm, 'customer-edit': renderCustomerForm, orders: renderOrderList,
-  'order-new': renderOrderForm, 'customer-order-new': renderOrderForm, 'order-edit': renderOrderForm };
+  'order-new': renderOrderForm, 'customer-order-new': renderOrderForm, 'order-edit': renderOrderForm, order: renderOrderView };
 const deps = { newId: () => crypto.randomUUID(), now: () => Date.now() };
 
 function bannerFor(code) {

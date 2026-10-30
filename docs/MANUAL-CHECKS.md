@@ -108,6 +108,25 @@
 - [ ] UX: each screen of the slice matches its sketch in docs/UI-SPEC.md at 320 px and at desktop width
 - [ ] UX: order form: the picker shows name and email for two customers of the same name; the date field opens with today
 
+## S15
+- [ ] R-08: Delete order asks first; Cancel changes nothing, confirming removes the order and its lines, and the customer stays
+- [ ] R-14: lines of 3 x 0.10 and 3 x 19.99 show line totals of 0.30 and 59.97
+- [ ] R-15: the order total is the sum of the line totals; an order with no lines shows 0.00
+- [ ] R-16: every amount shows two decimals and the euro sign, in the browser's language
+- [ ] R-18: an order with no lines shows No lines yet. Add the first one.
+- [ ] R-22: seed notes and a description of <b>x</b>, the view shows them literally
+- [ ] R-28: the view shows number, customer, date, notes, each line in the order added, and the total; the Customer link and both lists are reachable; from the order list and the customer detail, selecting an order opens this view
+- [ ] UX: keyboard only, from the first field to the outcome, focus visible at every step
+- [ ] UX: 200% browser zoom, nothing cut off, no horizontal scroll
+- [ ] UX: contrast 4.5:1 on text, 3:1 on large text and borders (browser devtools)
+- [ ] UX: empty states: an empty list and an empty form say what to do
+- [ ] UX: a validation error appears next to its field and says how to fix it
+- [ ] UX: 320 px wide, every screen of the slice, no horizontal scroll
+- [ ] UX: design tokens only: no raw color, size or spacing outside :root in styles.css (grep for "#", "rgb(", "px" outside the token block)
+- [ ] UX: every button, link, input and tab shows hover, focus-visible, active and disabled as docs/UI-SPEC.md describes
+- [ ] UX: type and spacing scales respected: every font-size and every margin, padding and gap is a token
+- [ ] UX: each screen of the slice matches its sketch in docs/UI-SPEC.md at 320 px and at desktop width
+
 ## S13
 - [ ] R-09: the list shows number, customer, date and total, newest date first, then highest number first
 - [ ] R-10: type part of a number, then part of a customer name in another case, only matching rows show; empty the box, all show

@@ -29,3 +29,23 @@
 - [ ] UX: not found: an invented hash shows the screen and no part of the hash
 - [ ] UX: blocked screen: with invalid JSON under the invoice-app key, no list and no nav show; copy works; Start with empty data asks first
 - [ ] UX: all colors: the contrast ratios of section 3 match the browser devtools
+
+## S10
+- [ ] R-03: with seeded customers, the list shows name and email, sorted by name whatever the case
+- [ ] R-05: type part of a name, then part of an email, with spaces around it, only matching rows show; empty the box, all show
+- [ ] R-18: with no customers, No customers yet. Add the first one. shows; with a search that matches nothing, Clear search returns all and focus to the box
+- [ ] R-19: the note about this browser shows, also with no customers
+- [ ] R-22: seed a customer named <b>x</b> and search for <b>x</b>, the text shows literally in the row
+- [ ] R-28: Customers and Orders are reachable from this screen, the Customers link is marked current
+- [ ] R-32: press Erase all data, the dialog says all customers and orders will be gone for good; Cancel changes nothing, confirming empties the list and the invoice-app key is gone
+- [ ] UX: keyboard only, from the first field to the outcome, focus visible at every step
+- [ ] UX: 200% browser zoom, nothing cut off, no horizontal scroll
+- [ ] UX: contrast 4.5:1 on text, 3:1 on large text and borders (browser devtools)
+- [ ] UX: empty states: an empty list and an empty form say what to do
+- [ ] UX: a validation error appears next to its field and says how to fix it
+- [ ] UX: 320 px wide, every screen of the slice, no horizontal scroll
+- [ ] UX: design tokens only: no raw color, size or spacing outside :root in styles.css (grep for "#", "rgb(", "px" outside the token block)
+- [ ] UX: every button, link, input and tab shows hover, focus-visible, active and disabled as docs/UI-SPEC.md describes
+- [ ] UX: type and spacing scales respected: every font-size and every margin, padding and gap is a token
+- [ ] UX: each screen of the slice matches its sketch in docs/UI-SPEC.md at 320 px and at desktop width
+- [ ] UX: customer list: type in search, the caret stays and the list narrows; a 100-character name wraps at 320 px and truncates with a title on desktop

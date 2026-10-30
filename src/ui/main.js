@@ -3,6 +3,7 @@ import { createNameCompare } from './format.js';
 import { parseRoute, routeTitle } from './router.js';
 import { banner, bannerRegion, fillDialog, setBanner } from './views/components.js';
 import { renderBlocked } from './views/blocked.js';
+import { renderCustomerList } from './views/customer-list.js';
 import { renderNotFound } from './views/not-found.js';
 
 /** The texts a user sees with a code (ADR-007). Failure texts end with the code. */
@@ -38,7 +39,7 @@ const state = { data: null, blocked: null, route: null, form: null, searchCustom
 let renderedHash = null;
 
 /** Screens by route name; a route with no screen yet renders the not-found screen. */
-const SCREENS = {};
+const SCREENS = { customers: renderCustomerList };
 
 function bannerFor(code) {
   return CODES[code];
@@ -97,6 +98,31 @@ function startEmpty({ opener, onFailed }) {
   });
 }
 
+const ERASE_DIALOG = Object.freeze({
+  title: 'Erase all data?',
+  text: 'All customers and orders on this device will be gone for good, and order numbers start again at ORD-0001.',
+  safeLabel: 'Cancel',
+  confirmLabel: 'Erase all data',
+});
+
+/** R-32: erase the stored document after a confirmation, then land on the empty customer list. */
+function eraseAll(opener) {
+  openDialog(ERASE_DIALOG, opener, {
+    onConfirm: () => {
+      const erased = storage.erase();
+      if (!erased.ok) {
+        showBanner('STO-02');
+        return;
+      }
+      state.data = erased.data;
+      state.searchCustomers = '';
+      state.searchOrders = '';
+      location.replace('#/customers');
+      render();
+    },
+  });
+}
+
 function markNav(route) {
   const section = route.name === 'not-found' ? null : route.name.startsWith('customer') ? 'customers' : 'orders';
   for (const link of header.querySelectorAll('[data-nav]')) {
@@ -120,7 +146,7 @@ function renderRoute() {
   document.title = routeTitle(route);
   state.form = null;
   const screen = SCREENS[route.name] ?? renderNotFound;
-  return screen(mainElement, { route, state, compareNames, commit, openDialog, bannerRegion });
+  return screen(mainElement, { route, state, compareNames, commit, openDialog, bannerRegion, eraseAll });
 }
 
 function render() {

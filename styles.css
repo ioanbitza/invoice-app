@@ -373,3 +373,64 @@ dialog p { overflow-wrap: anywhere; }
 @media (min-width: 64rem) {
   .dialog-actions { flex-direction: row; justify-content: flex-end; }
 }
+
+/* Customer list */
+.title-row { display: flex; flex-direction: column; gap: var(--space-3); }
+.title-row .button { width: 100%; }
+.search { max-width: var(--width-form); }
+.search-count {
+  min-height: calc(var(--leading-body) * var(--text-sm));
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+.panel-table { padding: 0; gap: 0; overflow: hidden; }
+.cell-muted { color: var(--color-text-muted); }
+.row-open { color: var(--color-text); font-weight: var(--weight-bold); text-decoration: none; overflow-wrap: anywhere; }
+.row-open:hover { text-decoration: underline; }
+.data-note { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-3); }
+.note-text { font-size: var(--text-sm); color: var(--color-text-muted); overflow-wrap: anywhere; }
+
+.table-customers,
+.table-customers tbody,
+.table-customers tr,
+.table-customers td { display: block; }
+.table-customers thead {
+  position: absolute;
+  width: var(--border-width);
+  height: var(--border-width);
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.table-customers tr { height: auto; min-height: var(--row-height-touch); padding: var(--space-3); border-bottom: var(--border-width) solid var(--color-border); }
+.table-customers td { padding: 0; border: 0; overflow-wrap: anywhere; }
+
+@media (min-width: 64rem) {
+  .title-row { flex-direction: row; align-items: center; justify-content: space-between; }
+  .title-row .button { width: auto; }
+  .data-note { flex-direction: row; align-items: center; justify-content: space-between; }
+  .table-customers { display: table; table-layout: fixed; }
+  .table-customers thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    display: table-header-group;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
+  }
+  .table-customers tbody { display: table-row-group; }
+  .table-customers tr { display: table-row; height: var(--row-height); min-height: 0; padding: 0; border-bottom: 0; }
+  .table-customers td {
+    display: table-cell;
+    padding: var(--space-2) var(--space-3);
+    border-bottom: var(--border-width) solid var(--color-border);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .table-customers .col-name { width: 40%; }
+  .table-customers .col-email { width: 60%; }
+  .table-customers .row-open { overflow-wrap: normal; }
+}

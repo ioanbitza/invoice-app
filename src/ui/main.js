@@ -95,6 +95,7 @@ function commit(nextData, hash) {
   const saved = storage.save(nextData);
   if (!saved.ok) return { ok: false, code: SAVE_FAILURE_CODES[saved.reason] };
   state.data = nextData;
+  if (state.route?.name === 'customer-new') state.searchCustomers = '';
   if (hash !== undefined) goTo(hash);
   return { ok: true };
 }

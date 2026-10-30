@@ -414,6 +414,7 @@ dialog p { overflow-wrap: anywhere; }
 }
 .table-customers tr { height: auto; min-height: var(--row-height-touch); padding: var(--space-3); border-bottom: var(--border-width) solid var(--color-border); }
 .table-customers td { padding: 0; border: 0; overflow-wrap: anywhere; }
+.table-customers .cell-email { color: var(--color-text-muted); }
 
 @media (min-width: 64rem) {
   .title-row { flex-direction: row; align-items: center; justify-content: space-between; }
@@ -440,6 +441,8 @@ dialog p { overflow-wrap: anywhere; }
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+  .table-customers .cell-email { color: var(--color-text); }
+  .table-customers .cell-email.cell-muted { color: var(--color-text-muted); }
   .table-customers .col-name { width: 40%; }
   .table-customers .col-email { width: 60%; }
   .table-customers .row-open { overflow-wrap: normal; }

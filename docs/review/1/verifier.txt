@@ -1,0 +1,12 @@
+Model: claude-opus-5-5
+Gate: GATE PASS, tests 55 passed, 0 failed
+Mutations: 209 planted, 200 caught, 9 survived
+  survived: src/domain/customers.js:17 ">" -> ">="
+  survived: src/domain/customers.js:17 "0" -> "1"
+  survived: src/domain/customers.js:55 "0" -> "1"
+  survived: src/domain/lines.js:47 "===" -> "!=="
+  survived: src/domain/orders.js:30 "false" -> "true"
+  survived: src/domain/orders.js:32 "false" -> "true"
+  survived: src/domain/orders.js:38 "===" -> "!=="
+  survived: src/domain/orders.js:45 "<" -> "<="
+  survived: src/storage/store.js:61 "true" -> "false"

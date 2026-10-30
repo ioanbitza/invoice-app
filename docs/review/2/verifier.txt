@@ -1,0 +1,6 @@
+Model: claude-opus-5-5
+Gate: GATE PASS, tests 61 passed, 0 failed (node --test: 61 tests, 61 pass, 0 fail)
+Mutations: 209 planted, 206 caught, 3 survived
+  survived: src/domain/customers.js:17 ">" -> ">="
+  survived: src/domain/customers.js:17 "0" -> "1"
+  survived: src/domain/orders.js:45 "<" -> "<="

@@ -1,0 +1,98 @@
+[
+ {
+  "id": "COR-6",
+  "class": "correctness",
+  "severity": "advisory",
+  "file": "tests/customers.test.js",
+  "line": 68,
+  "what_breaks": "Every updateCustomer test uses a state with a single customer (stateWith([ana])). If updateCustomer overwrote every customer instead of only the one with the matching id, all R-03 tests would still pass. That bug would silently replace other customers' data with the edited fields.",
+  "requirement": "R-03",
+  "evidence": "tests/customers.test.js lines 68-89: the R-03 tests call updateCustomer on stateWith([ana]) only. In src/domain/customers.js line 49, customers.map((c) =&gt; (c.id === id ? { id, ...clean(input) } : c)) gives the same result for one customer as customers.map(() =&gt; ({ id, ...clean(input) })). No test checks that a second customer stays unchanged.",
+  "proven": true,
+  "finder": "correctness"
+ },
+ {
+  "id": "COR-7",
+  "class": "correctness",
+  "severity": "advisory",
+  "file": "tests/lines.test.js",
+  "line": 6,
+  "what_breaks": "stateWith() in the lines tests always builds a state with exactly one order (o1). If changeOrder in src/domain/lines.js wrote the new lines to every order instead of only orderId, the add, edit and remove tests would all still pass. That bug would copy or remove lines across every order and corrupt the totals.",
+  "requirement": "R-11",
+  "evidence": "tests/lines.test.js lines 6-9: orders is always [order o1]. In src/domain/lines.js line 32, state.orders.map((o) =&gt; (o.id === orderId ? { ...o, lines: changed.lines } : o)) cannot be told apart from a map that replaces every order's lines, because there is only one order. No lines test has a second order to check that it stays unchanged.",
+  "proven": true,
+  "finder": "correctness"
+ },
+ {
+  "id": "COR-8",
+  "class": "correctness",
+  "severity": "advisory",
+  "file": "src/ui/app.js",
+  "line": 25,
+  "what_breaks": "The error banner is cleared only when a commit succeeds. A refusal or failure message stays on screen while the user moves between tabs and screens. It then sits above unrelated content as if it still applied, for example 'This customer has 1 order. They must be deleted first.' shown while another customer or the Orders tab is open.",
+  "requirement": "R-05",
+  "evidence": "customers-view.js removeCustomer calls ctx.showError(result.errors.orders) when the delete is refused. app.js clearError() is called only in commit() after a successful save (line 61). switchTab (line 65) and the show() functions in customers-view.js and orders-view.js never clear the banner. Sequence: open a customer with one order, click Delete, confirm, click Back, open another customer. The banner still shows the first customer's refusal.",
+  "proven": true,
+  "finder": "correctness"
+ },
+ {
+  "id": "COR-9",
+  "class": "correctness",
+  "severity": "advisory",
+  "file": "src/ui/lines-view.js",
+  "line": 4,
+  "what_breaks": "Which line is being edited is stored at module level (lineView.editingLineId) and is never reset when the user leaves the order. If the user clicks Edit on a line, then Back, then later opens the same order again, the form opens in 'Edit line' mode with that line's values prefilled instead of 'Add line'. A user who expects an add form may change the existing line by mistake.",
+  "requirement": "R-13",
+  "evidence": "lines-view.js line 48 sets lineView.editingLineId = line.id. It is reset only on a successful submit (line 106) or on Cancel (line 85). The Back button in orders-view.js (lines 136 and 17-21) does not reset it. buildForm (line 73) finds the line again in the reopened order and renders the edit form.",
+  "proven": true,
+  "finder": "correctness"
+ },
+ {
+  "id": "SEC-8",
+  "class": "security",
+  "severity": "advisory",
+  "file": "src/ui/app.js",
+  "line": 5,
+  "what_breaks": "This is cycle 1 SEC-4, still unproven, and the cycle 1 fixes did not change it. window.localStorage is read at module top level, outside any try. If the browser blocks site data, the getter throws a SecurityError. The module then stops before store.load runs, so main stays empty and the banner never shows. The store's catch around getItem is never reached, and the error appears only in the console. The F-07 fix in render() does not help, because render() is never called.",
+  "requirement": "R-18",
+  "evidence": "Line 5 is `const store = createStore(window.localStorage);` with no try around it. store.js load() wraps only storage.getItem(KEY). Probe: in Chrome, block all site data for localhost, reload http://localhost:8000, and check whether the banner shows an error or the page is blank under the header.",
+  "proven": false,
+  "finder": "security"
+ },
+ {
+  "id": "SEC-9",
+  "class": "correctness",
+  "severity": "advisory",
+  "file": "src/ui/app.js",
+  "line": 22,
+  "what_breaks": "This is cycle 1 SEC-5, still unproven and unchanged. crypto.randomUUID exists only in secure contexts. On a non-localhost http origin, newId throws a TypeError inside the submit handlers before commit runs, so Add customer, New order and Add line fail with no message on the page.",
+  "requirement": "R-01",
+  "evidence": "`newId: () =&gt; crypto.randomUUID()` is called unguarded at customers-view.js:158, orders-view.js:124 and lines-view.js:105. Probe: serve with python3 -m http.server 8000, open http://&lt;LAN-IP&gt;:8000, add a customer, and watch the page and the console.",
+  "proven": false,
+  "finder": "security"
+ },
+ {
+  "id": "CON-10",
+  "class": "contract",
+  "severity": "advisory",
+  "file": "src/ui/app.js",
+  "line": 46,
+  "what_breaks": "The F-07 fix changes the locked screen in a way that departs from the plan, and leaves an earlier manual check out of date. PLAN S6 step 2 says the app disables all forms on a load error. The code now replaces the whole main area with one message, so there are no forms to disable. The R-18 manual check that was ticked before the fix still describes disabled forms, so it no longer matches the screen. The new F-07 check describes the new screen. A human should re-run or reword the old R-18 check.",
+  "requirement": "R-18",
+  "evidence": "Code: `if (locked) showLockedMessage();` and `main.replaceChildren(message);`. The removed `disableForms()` used to set `control.disabled = true`. PLAN S6 step 2: 'On a load error it shows the banner and disables all forms.' docs/MANUAL-CHECKS.md, still ticked: '- [x] R-18: ... an error banner shows, forms are disabled, and the key still holds `{bad`.' docs/MANUAL-CHECKS.md, new F-07 line: '... and there are no forms.'",
+  "proven": true,
+  "finder": "contract"
+ },
+ {
+  "id": "CON-11",
+  "class": "contract",
+  "severity": "advisory",
+  "file": "src/ui/orders-view.js",
+  "line": 45,
+  "what_breaks": "Commit f558ef5 names F-07 and R-18, but it holds no F-07 change and R-18 is not one of S7's requirements. Its only code change is the F-10 reset of the customer filter. The F-07 code change is all in the S6 commit abf900c. So the commit message traces R-18 to a slice that does not cover it.",
+  "requirement": "R-18",
+  "evidence": "Commit: 'S7: fix F-07, F-10 (R-10, R-18)'. Its whole code diff is `+  if (!ctx.state.customers.some((c) =&gt; c.id === view.customerId)) view.customerId = '';` plus one MANUAL-CHECKS line. PLAN S7: '**Covers on screen:** R-07..R-16, R-20, R-21.' R-18 is covered by S5 and S6 only (Coverage check: 'R-18 S5, S6').",
+  "proven": true,
+  "finder": "contract"
+ }
+]

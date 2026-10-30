@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Invoice app</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./src/ui/main.js"></script>
+</head>
+<body>
+  <header class="app-header" id="app-header">
+    <span class="app-name">Invoice app</span>
+    <nav aria-label="Main" class="main-nav">
+      <a href="#/customers" data-nav="customers">Customers</a>
+      <a href="#/orders" data-nav="orders">Orders</a>
+    </nav>
+  </header>
+  <main id="main" class="page"></main>
+
+  <dialog id="dialog" aria-labelledby="dialog-title" aria-describedby="dialog-text">
+    <h2 id="dialog-title"></h2>
+    <p id="dialog-text"></p>
+    <div class="dialog-actions" id="dialog-actions"></div>
+  </dialog>
+
+  <template id="icon-info"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="12" y1="7" x2="12" y2="7"/></svg></template>
+  <template id="icon-success"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="7 12 11 16 17 8"/></svg></template>
+  <template id="icon-warning"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 3 22 21 2 21"/><line x1="12" y1="10" x2="12" y2="15"/><line x1="12" y1="18" x2="12" y2="18"/></svg></template>
+  <template id="icon-danger"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="8" y1="8" x2="16" y2="16"/><line x1="16" y1="8" x2="8" y2="16"/></svg></template>
+</body>
+</html>

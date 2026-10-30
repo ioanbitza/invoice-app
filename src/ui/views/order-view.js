@@ -3,7 +3,7 @@ import { deleteOrder } from '../../domain/orders.js';
 import { lineTotalCents, orderTotalCents, priceInputText } from '../../domain/money.js';
 import { formatDate, formatMoney } from '../format.js';
 import { routeToHash } from '../router.js';
-import { actionButton, element, field, heading, linkButton, panel } from './components.js';
+import { actionButton, bannerRegion, element, emptyState, field, heading, linkButton, panel } from './components.js';
 import { renderNotFound } from './not-found.js';
 
 const DELETE_DIALOG = Object.freeze({
@@ -83,7 +83,7 @@ function lineRow(line, position, locale, ui) {
   const description = cell('td', 'cell', 'col-description', line.description);
   description.title = line.description;
   const actionsCell = cell('td', 'cell', 'col-actions cell-number');
-  actionsCell.append(rowActions(line, position, ui.open));
+  actionsCell.append(ui.editing === line.id ? element('span', '', 'Editing') : rowActions(line, position, ui.open));
   row.append(
     description,
     dataCell('col-quantity cell-number', 'Quantity', String(line.quantity)),
@@ -110,8 +110,8 @@ function linesPanel(lines, locale, ui) {
     box.append(linesTable(lines, locale, ui));
     return box;
   }
-  const empty = element('div', 'empty-state');
-  empty.append(element('p', '', 'No lines yet. Add the first one.'));
+  const empty = emptyState({ text: 'No lines yet. Add the first one.', action: { label: 'Add line', variant: 'primary', name: 'add-line' } });
+  empty.querySelector('button').disabled = ui.open;
   box.append(empty);
   return box;
 }
@@ -142,15 +142,23 @@ function lineForm(title, values, errors) {
   const buttons = element('div', 'button-row');
   const save = actionButton('Save line', 'primary');
   save.type = 'submit';
-  buttons.append(save, actionButton('Cancel', 'secondary', 'cancel-line'));
-  form.append(
-    field({ id: 'line-description', label: 'Description', required: true, control: textControl('description', values.description), error: errorOf(errors, 'description') }),
+  save.id = 'line-save';
+  const cancel = actionButton('Cancel', 'secondary', 'cancel-line');
+  cancel.id = 'line-cancel';
+  buttons.append(save, cancel);
+  const pair = element('div', 'form-pair');
+  pair.append(
     field({ id: 'line-quantity', label: 'Quantity', required: true, control: textControl('quantity', values.quantity, 'numeric'), error: errorOf(errors, 'quantity') }),
     field({ id: 'line-unitPrice', label: 'Unit price in EUR', required: true, control: textControl('unitPrice', values.unitPrice, 'decimal'), helper: PRICE_HELPER, error: errorOf(errors, 'unitPrice') }),
+  );
+  form.append(
+    field({ id: 'line-description', label: 'Description', required: true, control: textControl('description', values.description), error: errorOf(errors, 'description') }),
+    pair,
     buttons,
   );
-  box.append(form);
-  return { box, form, save };
+  const region = bannerRegion();
+  box.append(region, form);
+  return { box, form, save, region };
 }
 
 function readLineValues(form) {
@@ -200,12 +208,20 @@ export function renderOrderView(container, context) {
   const linesHolder = element('div', 'lines-holder');
   const totalHolder = element('div', 'total-holder');
   const formHolder = element('div', 'form-holder');
+  const pageBanner = context.bannerRegion();
+  const root = element('div', 'order-view');
 
   function drawLines() {
     const now = currentOrder();
     addButton.disabled = ui.open;
+    addButton.hidden = now.lines.length === 0;
     linesHolder.replaceChildren(linesPanel(now.lines, locale, ui));
     totalHolder.replaceChildren(totalLine(now, locale));
+  }
+
+  /** The Add line button the user can see: the one in the empty panel while there are no lines. */
+  function visibleAddButton() {
+    return currentOrder().lines.length === 0 ? linesHolder.querySelector('[data-action="add-line"]') : addButton;
   }
 
   function showForm(values, errors) {
@@ -213,10 +229,7 @@ export function renderOrderView(container, context) {
     const built = lineForm(ui.editing ? `Edit line ${position}` : 'Add a line', values, errors);
     ui.form = built.form;
     ui.save = built.save;
-    built.form.addEventListener('submit', onSubmit);
-    built.form.addEventListener('focusin', (event) => {
-      ui.lastFocused = event.target.id;
-    });
+    ui.region = built.region;
     formHolder.replaceChildren(built.box);
   }
 
@@ -234,7 +247,7 @@ export function renderOrderView(container, context) {
     ui.lastFocused = 'line-description';
     drawLines();
     showForm(ui.start, []);
-    state.form = { hash: location.hash, isDirty, restoreFocus: () => document.getElementById(ui.lastFocused).focus() };
+    state.form = { hash: location.hash, isDirty, restoreFocus: () => (document.getElementById(ui.lastFocused) ?? document.getElementById('line-description')).focus() };
     document.getElementById('line-description').focus();
   }
 
@@ -242,15 +255,21 @@ export function renderOrderView(container, context) {
     ui.open = false;
     ui.editing = null;
     ui.form = null;
+    ui.region = null;
     state.form = null;
     formHolder.replaceChildren();
+    pageBanner.replaceChildren();
     drawLines();
   }
 
+  function editButtonOf(lineId) {
+    return [...linesHolder.querySelectorAll('button[data-action="edit-line"]')].find((button) => button.dataset.lineId === lineId);
+  }
+
   function cancelForm() {
-    const opener = ui.opener;
+    const lineId = ui.editing;
     closeForm();
-    const target = opener.isConnected && !opener.disabled ? opener : addButton;
+    const target = (lineId && editButtonOf(lineId)) || visibleAddButton();
     target.focus();
   }
 
@@ -276,12 +295,12 @@ export function renderOrderView(container, context) {
     }
     const saved = commit(result.data);
     if (!saved.ok) {
-      showBanner(saved.code);
+      showBanner(saved.code, ui.region);
       ui.save.focus();
       return;
     }
     closeForm();
-    addButton.focus();
+    visibleAddButton().focus();
   }
 
   function removeOne(lineId) {
@@ -295,49 +314,53 @@ export function renderOrderView(container, context) {
       showBanner(saved.code);
       return;
     }
+    pageBanner.replaceChildren();
     drawLines();
-    addButton.focus();
+    visibleAddButton().focus();
   }
-
-  function onClick(event) {
-    const button = event.target.closest('button[data-action]');
-    if (!button || button.disabled) return;
-    const action = button.dataset.action;
-    if (action === 'add-line') openForm(null, button);
-    else if (action === 'edit-line') openForm(button.dataset.lineId, button);
-    else if (action === 'cancel-line') cancelForm();
-    else if (action === 'remove-line') removeOne(button.dataset.lineId);
-  }
-
-  for (const part of [linesRow, linesHolder, formHolder]) part.addEventListener('click', onClick);
 
   function confirmDelete(result) {
-    const saved = commit(result.data);
-    if (!saved.ok) {
-      showBanner(saved.code);
-      return;
-    }
-    location.replace('#/orders');
+    const saved = commit(result.data, routeToHash({ name: 'orders' }), { replace: true });
+    if (!saved.ok) showBanner(saved.code);
   }
 
-  deleteButton.addEventListener('click', () => {
+  function askDelete() {
     const result = deleteOrder(state.data, { id: order.id }, deps);
     if (!result.ok) {
       renderNotFound(container).focus();
       return;
     }
     openDialog(DELETE_DIALOG, deleteButton, { onConfirm: () => confirmDelete(result) });
+  }
+
+  const ACTIONS = {
+    'add-line': (button) => openForm(null, button),
+    'edit-line': (button) => openForm(button.dataset.lineId, button),
+    'cancel-line': cancelForm,
+    'remove-line': (button) => removeOne(button.dataset.lineId),
+    delete: askDelete,
+  };
+
+  root.addEventListener('click', (event) => {
+    const button = event.target.closest('button[data-action]');
+    if (!button || button.disabled) return;
+    ACTIONS[button.dataset.action](button);
+  });
+  root.addEventListener('submit', onSubmit);
+  root.addEventListener('focusin', (event) => {
+    if (ui.form && ui.form.contains(event.target)) ui.lastFocused = event.target.id;
   });
 
   drawLines();
-  container.replaceChildren(
+  root.append(
     titleRow,
-    context.bannerRegion(),
+    pageBanner,
     details(order, customer, locale),
     linesRow,
     linesHolder,
     totalHolder,
     formHolder,
   );
+  container.replaceChildren(root);
   return h1;
 }

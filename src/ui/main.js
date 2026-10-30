@@ -115,8 +115,9 @@ function goTo(hash, replace) {
   else location.hash = hash;
 }
 
-function showBanner(code) {
-  const region = document.querySelector('[data-banner-region]');
+/** `target` is a banner region of the screen's own (a form panel); without it the page region is used. */
+function showBanner(code, target) {
+  const region = target ?? document.querySelector('[data-banner-region]');
   if (region) return setBanner(region, bannerFor(code)).focus();
   const node = banner(bannerFor(code));
   mainElement.prepend(node);

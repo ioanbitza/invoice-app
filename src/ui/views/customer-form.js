@@ -107,13 +107,11 @@ export function renderCustomerForm(container, context) {
       renderNotFound(container);
       return;
     }
-    const saved = commit(result.data);
+    const saved = commit(result.data, where.saved);
     if (!saved.ok) {
       showBanner(saved.code);
-      return;
+      form.querySelector('[type="submit"]').focus();
     }
-    state.form = null;
-    location.hash = where.saved;
   }
 
   show(snapshot, []);

@@ -4,7 +4,8 @@ import { isRealDate } from './dates.js';
 const NAME_MAX = 100;
 const FIELD_MAX = 200;
 const NOTES_MAX = 500;
-const QUANTITY_PATTERN = /^\d{1,5}$/;
+const INVISIBLE_ONLY = /^[\p{Cf}\p{Z}\s]*$/u;
+const QUANTITY_PATTERN = /^\d+$/;
 
 const MESSAGES = Object.freeze({
   'customer.name.length': 'Name must be 1 to 100 characters.',
@@ -39,6 +40,7 @@ function untrimmedOf(input, field) {
 }
 
 function lengthError(field, code, text, min, max) {
+  if (min > 0 && INVISIBLE_ONLY.test(text)) return fieldError(field, code);
   return text.length < min || text.length > max ? fieldError(field, code) : null;
 }
 

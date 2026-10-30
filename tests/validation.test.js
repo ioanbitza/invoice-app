@@ -174,3 +174,24 @@ test('R-31 no error message contains the text the user typed', () => {
     assert.equal(JSON.stringify(result).includes(typed), false);
   }
 });
+
+test('R-11 a zero-padded quantity 000005 is stored as 5 and 100000 is refused by the range', () => {
+  assert.equal(validateLine(line({ quantity: '000005' })).value.quantity, 5);
+  assert.equal(validateLine(line({ quantity: '0009999' })).value.quantity, 9999);
+  for (const quantity of ['100000', '0010000', '00000']) {
+    assert.equal(validateLine(line({ quantity })).errors[0].code, 'line.quantity.invalid');
+  }
+});
+
+test('R-01 a customer name made only of invisible characters gives the name length error', () => {
+  for (const name of ['​', ' ​﻿ ', '‍⁠']) {
+    assert.equal(validateCustomer({ name }).errors[0].code, 'customer.name.length');
+  }
+  assert.equal(validateCustomer({ name: 'A​' }).ok, true);
+});
+
+test('R-11 a line description made only of invisible characters gives the description length error', () => {
+  for (const description of ['​', '​ ­']) {
+    assert.equal(validateLine(line({ description })).errors[0].code, 'line.description.length');
+  }
+});

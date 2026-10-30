@@ -1,6 +1,6 @@
 # ADR-006: Money
 
-Date: 2026-10-30. Status: accepted. Author: architect, accepted by Ioan Bita.
+Date: 2026-10-30. Status: accepted (2026-10-30, F-38 answered). Author: architect, accepted by Ioan Bita.
 Tags: javascript, browser
 
 ## Context
@@ -36,3 +36,4 @@ R-14 and R-15 demand totals exact to the cent, and A-04 stores whole cents. R-11
 - Currency per order: R-27.
 
 ## Answered
+Q: F-38. formatMoney adds currencyDisplay: narrowSymbol, which the decision text did not list.  A (2026-10-30, Ioan Bita): "Keep it. R-16 wants 1.234,50 € in Romanian and €1,234.50 in English; the narrow symbol is what gives that in every common locale. The option is part of this decision."

@@ -1,6 +1,6 @@
 # Requirements: customers, orders and order lines
 
-Status: approved
+Status: approved (2026-10-30, re-approved after review cycle 1: R-01, R-17, A-01)
 
 - **Said:** a local JavaScript app to create, edit, view and delete customers; create orders for customers; add, edit and remove order lines; calculate order totals; search or filter customers and orders; basic validation and useful empty and error states; data kept in `localStorage`.
 - **Implied:** one user on one browser, no login, no server; every order belongs to exactly one customer and every line to exactly one order; totals must be exact (money, not floats); data must survive a reload and must never be lost silently.
@@ -9,7 +9,7 @@ Status: approved
 ## Customers
 
 ### R-01 [MUST] Create a customer
-- Given the customer form, when the user saves a name (1 to 100 characters after trimming) and optionally an email, phone and address (each up to 200 characters), then the customer appears in the list.
+- Given the customer form, when the user saves a name (1 to 100 characters after trimming) and optionally an email, phone and address (each up to 200 characters), then the customer appears in the list; a customer search kept from before is cleared so the new customer is visible (review F-07).
 - An email, when given, must contain one `@` with text on both sides and a dot in the part after it; otherwise the form shows an error and nothing is saved.
 
 ### R-02 [MUST] Edit a customer
@@ -92,6 +92,7 @@ Status: approved
 - Each invalid field shows a message next to it naming the rule it broke; the first invalid field gets the focus; nothing is saved until all fields are valid.
 - Every form has a Cancel action that closes it and discards what was typed; the saved values stay as they were.
 - An invalid edit of an order or a line is not saved and the old values stay, as in R-02.
+- A text made only of invisible characters (zero-width or other format characters) counts as empty for every required field (review F-13).
 
 ### R-18 [MUST] Empty states
 - No customers, no orders, an order with no lines and a search with no results each show a message that says what to do next (for example "No customers yet. Add the first one.").
@@ -135,7 +136,7 @@ Status: approved
 ### R-30 [LATER] Filter orders by one customer
 
 ## Assumptions
-- **A-01** One user, one browser, no accounts, on a device only that user can open. Only one tab is open at a time; two tabs are not supported. Data stays on the device; nothing is sent anywhere.
+- **A-01** One user, one browser, no accounts, on a device only that user can open. Only one tab is open at a time; two tabs are not supported. Data stays on the device; nothing is sent anywhere. The app runs on a secure context only (http://localhost or https); a plain http address on the LAN is not supported (review F-14, ADR-001).
 - **A-02** Customer fields: name (required), email, phone, address (all optional, free text up to 200 characters, empty by default).
 - **A-03** One fixed currency for the whole app, EUR, no tax (confirmed by the human).
 - **A-04** Money is stored as whole cents (integer); display formatting uses the browser's locale.

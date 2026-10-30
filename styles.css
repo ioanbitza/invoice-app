@@ -587,6 +587,14 @@ dialog p { overflow-wrap: anywhere; }
 .table-lines td[data-label]::before { content: attr(data-label); color: var(--color-text-muted); font-weight: var(--weight-normal); }
 .table-lines .col-actions:empty { display: none; }
 
+.row-actions { display: flex; gap: var(--space-2); justify-content: flex-start; }
+.row-actions .button { padding: 0 var(--space-2); }
+
+.line-form {
+  margin-top: var(--space-4);
+  animation: banner-in var(--duration-base) var(--easing);
+}
+
 .order-total {
   display: flex;
   justify-content: space-between;
@@ -623,4 +631,5 @@ dialog p { overflow-wrap: anywhere; }
   .table-lines .col-price { width: 18%; }
   .table-lines .col-line-total { width: 20%; }
   .table-lines .col-actions { width: 22%; }
+  .row-actions { justify-content: flex-end; }
 }

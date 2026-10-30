@@ -188,7 +188,7 @@
   "author": "sonnet",
   "startedAt": "2026-10-30T17:00:29.346Z",
   "rendered": true,
-  "nextF": 46,
+  "nextF": 48,
   "previous": null,
   "verdict": "FIX FIRST",
   "confirmed": [
@@ -900,6 +900,30 @@
       "level": "code",
       "merged": [],
       "fid": "F-45"
+    },
+    {
+      "fid": "F-46",
+      "id": "UAT-1",
+      "class": "uat",
+      "severity": "blocking",
+      "level": "code",
+      "file": "styles.css",
+      "line": 588,
+      "what_breaks": "on desktop (1100 px) the order lines table collapses: cells render stacked and digits one per line, because .table-lines td[data-label] keeps display:flex above 64rem; the stacked layout is right at 320 px only",
+      "evidence": "seen by the human in the browser, recorded with the decision",
+      "requirement": "none"
+    },
+    {
+      "fid": "F-47",
+      "id": "UAT-2",
+      "class": "uat",
+      "severity": "blocking",
+      "level": "code",
+      "file": "src/ui/views/order-form.js",
+      "line": 1,
+      "what_breaks": "the customer field of the order form opened from a customer detail is read-only yet labelled Customer (optional); the label must say Customer and not call a fixed value optional",
+      "evidence": "seen by the human in the browser, recorded with the decision",
+      "requirement": "none"
     }
   ],
   "watchList": [
@@ -1114,5 +1138,87 @@
     "LEG": 7,
     "VER": 3
   },
-  "renderedAt": "2026-10-30T17:45:37.854Z"
+  "renderedAt": "2026-10-30T17:45:37.854Z",
+  "decisions": {
+    "cycle": 1,
+    "accepted": [
+      "F-01",
+      "F-02",
+      "F-03",
+      "F-04",
+      "F-05",
+      "F-06",
+      "F-07",
+      "F-08",
+      "F-09",
+      "F-10",
+      "F-11",
+      "F-12",
+      "F-13",
+      "F-15",
+      "F-16",
+      "F-17",
+      "F-18",
+      "F-19",
+      "F-20",
+      "F-21",
+      "F-22",
+      "F-23",
+      "F-24",
+      "F-25",
+      "F-26",
+      "F-27",
+      "F-28",
+      "F-30",
+      "F-31",
+      "F-32",
+      "F-33",
+      "F-34",
+      "F-35",
+      "F-36",
+      "F-37",
+      "F-39",
+      "F-40",
+      "F-42",
+      "F-43",
+      "F-44",
+      "F-46",
+      "F-47"
+    ],
+    "rejected": [
+      "F-14",
+      "F-29",
+      "F-38",
+      "F-41",
+      "F-45"
+    ],
+    "reported": [
+      {
+        "fid": "F-46",
+        "id": "UAT-1",
+        "class": "uat",
+        "severity": "blocking",
+        "level": "code",
+        "file": "styles.css",
+        "line": 588,
+        "what_breaks": "on desktop (1100 px) the order lines table collapses: cells render stacked and digits one per line, because .table-lines td[data-label] keeps display:flex above 64rem; the stacked layout is right at 320 px only",
+        "evidence": "seen by the human in the browser, recorded with the decision",
+        "requirement": "none"
+      },
+      {
+        "fid": "F-47",
+        "id": "UAT-2",
+        "class": "uat",
+        "severity": "blocking",
+        "level": "code",
+        "file": "src/ui/views/order-form.js",
+        "line": 1,
+        "what_breaks": "the customer field of the order form opened from a customer detail is read-only yet labelled Customer (optional); the label must say Customer and not call a fixed value optional",
+        "evidence": "seen by the human in the browser, recorded with the decision",
+        "requirement": "none"
+      }
+    ],
+    "note": "F-14: ADR-001 and A-01 name secure contexts only, assumption recorded. F-29: years 0000 to 0099 are not a real input. F-38: narrowSymbol is what R-16 asks for, recorded in ADR-006. F-41: a commit message is history, not rewritten. F-45: action majors are the kit template's choice, outside this app.",
+    "decidedAt": "2026-10-30T17:47:26.715Z"
+  }
 }

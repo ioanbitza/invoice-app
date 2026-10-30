@@ -57,8 +57,9 @@ const FORM_ROUTES = Object.freeze(['customer-new', 'customer-edit', 'order-new',
 const FIRST_FIELD = 'input:not([type="hidden"]):not([readonly]):not([disabled]), select:not([disabled]), textarea:not([readonly]):not([disabled])';
 const BLOCKED_TITLE = 'Data problem - Invoice app';
 
+const LOCALE = navigator.language;
 const storage = openBrowserStorage();
-const compareNames = createNameCompare(navigator.language);
+const compareNames = createNameCompare(LOCALE);
 const mainElement = document.getElementById('main');
 const dialog = document.getElementById('dialog');
 const header = document.getElementById('app-header');
@@ -95,9 +96,15 @@ function commit(nextData, hash) {
   const saved = storage.save(nextData);
   if (!saved.ok) return { ok: false, code: SAVE_FAILURE_CODES[saved.reason] };
   state.data = nextData;
-  if (state.route?.name === 'customer-new') state.searchCustomers = '';
+  if (state.route?.name === 'customer-new' || customerWasDeleted(nextData)) state.searchCustomers = '';
   if (hash !== undefined) goTo(hash);
   return { ok: true };
+}
+
+/** R-04: once a customer is deleted, the text typed to find them is cleared too. */
+function customerWasDeleted(nextData) {
+  const route = state.route;
+  return route?.name === 'customer' && !nextData.customers.some((item) => item.id === route.id);
 }
 
 function goTo(hash) {
@@ -199,7 +206,7 @@ function renderRoute() {
   document.title = routeTitle(route);
   state.form = null;
   const screen = SCREENS[route.name] ?? renderNotFound;
-  const h1 = screen(mainElement, { route, state, compareNames, commit, openDialog, bannerRegion, eraseAll, showBanner, deps });
+  const h1 = screen(mainElement, { route, state, compareNames, commit, openDialog, bannerRegion, eraseAll, showBanner, deps, locale: LOCALE });
   if (h1.dataset.screen === 'not-found') showAsNotFound();
   return h1;
 }

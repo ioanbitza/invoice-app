@@ -129,10 +129,9 @@ function buildTop(customer, h1) {
 
 /** Screen 7.3: one customer's fields and orders, with delete (R-04) and export (R-29). */
 export function renderCustomerDetail(container, context) {
-  const { route, state, commit, openDialog, showBanner, deps } = context;
+  const { route, state, commit, openDialog, showBanner, deps, locale } = context;
   const customer = state.data.customers.find((item) => item.id === route.id);
   if (!customer) return renderNotFound(container);
-  const locale = navigator.language;
   const rows = ordersForCustomer(state.data, customer.id);
   const newOrderHref = routeToHash({ name: 'customer-order-new', id: customer.id });
   const region = context.bannerRegion();
@@ -148,12 +147,8 @@ export function renderCustomerDetail(container, context) {
   });
 
   function confirmDelete(result) {
-    const saved = commit(result.data);
-    if (!saved.ok) {
-      showBanner(saved.code);
-      return;
-    }
-    location.replace('#/customers');
+    const saved = commit(result.data, routeToHash({ name: 'customers' }));
+    if (!saved.ok) showBanner(saved.code);
   }
 
   deleteButton.addEventListener('click', () => {

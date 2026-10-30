@@ -1,6 +1,6 @@
 # Plan: customers, orders and order lines
 
-Status: approved
+Status: approved (2026-10-30, re-approved: R-31 manual check added to S13 after review F-44)
 
 Reads: `docs/REQUIREMENTS.md` (approved), `docs/decisions/ADR-001` to `ADR-008` (accepted), `docs/UI-SPEC.md` (approved), `AGENTS.md`.
 
@@ -398,7 +398,7 @@ Reopens `styles.css` to add the detail list and the orders table and `src/ui/mai
 **Risks:** the download under `default-src 'none'` is checked once here, as ADR-008 requires. `New order` and the order rows reach screen 7.7 until S14 and S15 build them.
 
 ## S13 Order list screen
-**Goal:** find an order by typing, newest first, with its total. **Covers on screen:** R-09, R-10, R-16, R-18, R-22, R-28.
+**Goal:** find an order by typing, newest first, with its total. **Covers on screen:** R-09, R-10, R-16, R-18, R-22, R-28, R-31.
 **Files:** `styles.css`, `src/ui/main.js`, `src/ui/views/order-list.js`
 
 Reopens `styles.css` to add the columns of this table and `src/ui/main.js` to add the route; this screen did not exist before.
@@ -417,6 +417,7 @@ Reopens `styles.css` to add the columns of this table and `src/ui/main.js` to ad
 - [ ] R-18: with no customers the list says a customer must be added first and links to the customer form, and no order can be started; with no orders it offers the first one; a search with no match says so and offers to clear it
 - [ ] R-22: search for <b>x</b>, the search text and any customer named so show literally
 - [ ] R-28: selecting a row leaves for that order's address; Customers and Orders are reachable, the Orders link is marked current
+- [ ] R-31: type a customer name into the order search, then into the customer search; the address bar and the page title never show the typed text (review F-44)
 - [ ] UX: keyboard only, from the first field to the outcome, focus visible at every step
 - [ ] UX: 200% browser zoom, nothing cut off, no horizontal scroll
 - [ ] UX: contrast 4.5:1 on text, 3:1 on large text and borders (browser devtools)

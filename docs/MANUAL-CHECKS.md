@@ -166,6 +166,7 @@
 - [ ] R-18: with no customers the list says a customer must be added first and links to the customer form, and no order can be started; with no orders it offers the first one; a search with no match says so and offers to clear it
 - [ ] R-22: search for <b>x</b>, the search text and any customer named so show literally
 - [ ] R-28: selecting a row leaves for that order's address; Customers and Orders are reachable, the Orders link is marked current
+- [ ] R-31: type a customer name into the order search, then into the customer search; the address bar and the page title never show the typed text (review F-44)
 - [ ] UX: keyboard only, from the first field to the outcome, focus visible at every step
 - [ ] UX: 200% browser zoom, nothing cut off, no horizontal scroll
 - [ ] UX: contrast 4.5:1 on text, 3:1 on large text and borders (browser devtools)

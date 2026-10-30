@@ -1,6 +1,6 @@
 # ADR-003: Module layout and layering
 
-Date: 2026-10-30. Status: accepted. Author: architect, accepted by Ioan Bita.
+Date: 2026-10-30. Status: accepted (2026-10-30, D1 and CRI-3 answered). Author: architect, accepted by Ioan Bita.
 Tags: javascript, browser, web-ui
 
 ## Context
@@ -47,3 +47,5 @@ Tags: javascript, browser, web-ui
 - How the slices are cut: `docs/PLAN.md`.
 
 ## Answered
+Q: D1. May the screens share one extra file for what they all show the same way (banners, the confirmation dialog, form fields, empty states)?  A (2026-10-30, Ioan Bita): "Yes. One file, src/ui/views/components.js, pure rendering helpers, no state, no business rules. It joins the module map."
+Q: CRI-3. S3 puts Intl.Collator in the domain while the module map gives src/ui/format.js every Intl call; where does the collator live?  A (2026-10-30, Ioan Bita): "In src/ui/format.js: it builds the collator once from the locale and main.js passes its compare function to the domain list functions as a parameter. The domain imports no Intl."

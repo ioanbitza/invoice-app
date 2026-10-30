@@ -88,6 +88,26 @@
 - [ ] UX: each screen of the slice matches its sketch in docs/UI-SPEC.md at 320 px and at desktop width
 - [ ] UX: customer detail: Delete with orders shows the warning with the count and no dialog; Export data downloads customer-<id>.json under the CSP
 
+## S14
+- [ ] R-06: with two customers of the same name, the picker tells them apart by email; a saved order gets the next number and today's date unless changed, and opens
+- [ ] R-06: delete the newest order and create another, the number is not reused
+- [ ] R-07: edit an order, date and notes change; number and customer are read-only
+- [ ] R-17: save with no customer and a cleared date, both messages show and focus is on Customer; Cancel lands as ADR-005 says
+- [ ] R-18: on #/orders/new with no customers, no form shows and the message links to the customer form
+- [ ] R-21: fill localStorage until a save fails, the form stays filled and shows STO-01, and no order number is used up
+- [ ] R-22: save notes of <b>x</b>, the form shows them literally
+- [ ] UX: keyboard only, from the first field to the outcome, focus visible at every step
+- [ ] UX: 200% browser zoom, nothing cut off, no horizontal scroll
+- [ ] UX: contrast 4.5:1 on text, 3:1 on large text and borders (browser devtools)
+- [ ] UX: empty states: an empty list and an empty form say what to do
+- [ ] UX: a validation error appears next to its field and says how to fix it
+- [ ] UX: 320 px wide, every screen of the slice, no horizontal scroll
+- [ ] UX: design tokens only: no raw color, size or spacing outside :root in styles.css (grep for "#", "rgb(", "px" outside the token block)
+- [ ] UX: every button, link, input and tab shows hover, focus-visible, active and disabled as docs/UI-SPEC.md describes
+- [ ] UX: type and spacing scales respected: every font-size and every margin, padding and gap is a token
+- [ ] UX: each screen of the slice matches its sketch in docs/UI-SPEC.md at 320 px and at desktop width
+- [ ] UX: order form: the picker shows name and email for two customers of the same name; the date field opens with today
+
 ## S13
 - [ ] R-09: the list shows number, customer, date and total, newest date first, then highest number first
 - [ ] R-10: type part of a number, then part of a customer name in another case, only matching rows show; empty the box, all show

@@ -314,6 +314,7 @@ textarea { height: auto; padding: var(--space-2) var(--space-3); }
 input:focus, select:focus, textarea:focus { border-color: var(--color-primary); }
 [aria-invalid="true"] { border-color: var(--color-danger); }
 [readonly] { background: var(--color-bg); }
+input.mono { font-family: var(--font-mono); }
 
 .stored-text {
   font-family: var(--font-mono);

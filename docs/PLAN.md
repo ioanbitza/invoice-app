@@ -1,6 +1,6 @@
 # Plan: customers, orders and order lines
 
-Status: draft
+Status: approved
 
 Reads: `docs/REQUIREMENTS.md` (approved), `docs/decisions/ADR-001` to `ADR-008` (accepted), `docs/UI-SPEC.md` (approved), `AGENTS.md`.
 
@@ -77,8 +77,9 @@ The commands of every slice's Verify: `npm test` (ADR-001) and `node sdlc/tools/
 - `R-02 updateCustomer changes the fields of that customer only`
 - `R-02 updateCustomer with an invalid name returns the errors and no data`
 - `R-02 updateCustomer with an unknown id returns reason not-found`
-- `R-03 listCustomers sorts ana, Bogdan, Zoe case-insensitively`
-- `R-03 listCustomers sorts Șerban next to S for locale ro and breaks a name tie by id`
+- `R-03 listCustomers orders customers by the compare function it is given`
+- `R-03 listCustomers breaks a tie of that compare function by id`
+- `R-05 searchCustomers returns its matches in the order of the compare function it is given`
 - `R-04 deleteCustomer with no orders removes the customer`
 - `R-04 deleteCustomer with 3 orders returns reason customer-has-orders, orderCount 3, and no data`
 - `R-04 deleteCustomer with an unknown id returns reason not-found`
@@ -89,12 +90,12 @@ The commands of every slice's Verify: `npm test` (ADR-001) and `node sdlc/tools/
 **Steps:**
 1. Write the tests above, run them, see them fail.
 2. Write the commands in the shape `command(data, input, deps)` of ADR-003, calling the customer check of S2.
-3. Write `listCustomers(data, locale)` with `Intl.Collator` and `searchCustomers` as ADR-007 says.
+3. Write `listCustomers(data, compareNames)` and `searchCustomers(data, text, compareNames)`; the compare function is a parameter and the domain imports no `Intl` (ADR-003, `## Answered`).
 4. Write `customerLabel` for every place a customer is picked or shown read-only (A-12).
 
 **Verify:** `npm test`; the gate.
 
-**Risks:** ADR-003 gives `src/ui/format.js` every `Intl` call, while ADR-007 sorts with `Intl.Collator` in the domain, with the locale as an argument. This slice follows ADR-007, the more specific text, and ADR-003's own consequence that a domain rule receives the locale as an argument; `format.js` keeps every value that is displayed.
+**Risks:** ADR-007 still says the list uses `Intl.Collator` with the locale as an argument; this plan follows the later answer in ADR-003, where `src/ui/format.js` builds the collator and the domain receives only its compare function. The real sort order, case and Romanian letters included, is therefore tested in S8, and these tests pass their own compare function.
 
 ## S4 Order commands (domain)
 **Goal:** create, edit, delete, list and search orders, with numbers that are never reused. **Covers:** R-02, R-03, R-06, R-07, R-08, R-09, R-10.
@@ -208,10 +209,12 @@ The commands of every slice's Verify: `npm test` (ADR-001) and `node sdlc/tools/
 **Risks:** `storage.js` has no browser `QuotaExceededError` under Node, so the fake throws a `DOMException` with that name, which is available in Node 22. The first check of the real quota is the manual R-21 check of S11.
 
 ## S8 Router and formatters (pure UI helpers)
-**Goal:** addresses, page titles, money and dates as pure functions tested under Node, before any screen. **Covers:** R-16, R-28, R-31.
+**Goal:** addresses, page titles, money, dates and the name order as pure functions tested under Node, before any screen. **Covers:** R-03, R-16, R-28, R-31.
 **Files:** `src/ui/router.js`, `src/ui/format.js`, `tests/router.test.js`, `tests/format.test.js`
 
 **Tests first:**
+- `R-03 createNameCompare(en) sorts ana, Bogdan, Zoe whatever the case`
+- `R-03 createNameCompare(ro) sorts Șerban after Radu and before Tudor`
 - `R-16 formatMoney(123450, en) gives €1,234.50`
 - `R-16 formatMoney(123450, ro) gives 1.234,50 € with the locale's spaces`
 - `R-16 formatMoney(0, en) gives €0.00`
@@ -225,6 +228,7 @@ The commands of every slice's Verify: `npm test` (ADR-001) and `node sdlc/tools/
 1. Write the tests above, run them, see them fail.
 2. Write `parseRoute`, `routeToHash` and the frozen table of page titles of UI-SPEC section 7 in `src/ui/router.js`.
 3. Write `formatMoney(cents, locale)` and `formatDate(isoDate, locale)` in `src/ui/format.js`, with the options of UI-SPEC section 4 and ADR-006.
+4. Write `createNameCompare(locale)` in `src/ui/format.js`: it builds one `Intl.Collator(locale, { sensitivity: 'accent' })` and returns its compare function (ADR-003, `## Answered`).
 
 **Verify:** `npm test`; the gate. This slice has no screen, so its lines below are ticked once S9 is on screen. Into `docs/MANUAL-CHECKS.md`:
 - [ ] R-16: in a browser set to Romanian, open a screen with an amount (from S12), it shows 1.234,50 € rather than €1,234.50
@@ -246,22 +250,23 @@ The commands of every slice's Verify: `npm test` (ADR-001) and `node sdlc/tools/
 **Goal:** the page, its tokens, one write path and the two screens with no record behind them. **Covers on screen:** R-20, R-21, R-22, R-28, R-31, R-32.
 **Files:** `index.html`, `styles.css`, `src/ui/main.js`, `src/ui/views/components.js`, `src/ui/views/not-found.js`, `src/ui/views/blocked.js`
 
-NEEDS HUMAN: `src/ui/views/components.js` is not in the module map of ADR-003; see D1. This slice does not start until D1 is answered.
+`src/ui/views/components.js` joins the module map by the answer in ADR-003: pure rendering helpers, no state, no business rules.
 
 **Tests first:** none under Node; ADR-003 covers views by manual checks, and the storage and router rules this slice uses are tested in S7 and S8.
 
 **Steps:**
 1. Write `index.html`: the CSP meta tag of ADR-008 before any script or stylesheet, `lang="en"`, the one `<dialog>`, the four icon templates of UI-SPEC section 6, relative URLs, one module script.
 2. Write the `:root` tokens of `styles.css` from UI-SPEC sections 3, 4, 5 and 9, and the styles of the components of section 6.
-3. Write `src/ui/main.js`: composition root, UI state, `commit`, the frozen code table, the `error` and `unhandledrejection` listeners, the one `hashchange` listener with the leave-a-form rule of UI-SPEC section 8. A route whose screen is not built yet renders screen 7.7.
-4. Write `src/ui/views/components.js`: banner, confirmation dialog, field with label, helper and error, empty state.
+3. Write `src/ui/main.js`: composition root, UI state, `commit`, the name compare built once from `createNameCompare`, the frozen code table, the `error` and `unhandledrejection` listeners, the one `hashchange` listener with the leave-a-form rule of UI-SPEC section 8. A route whose screen is not built yet renders screen 7.7.
+4. Write `src/ui/views/components.js`, pure rendering helpers: banner, dialog content, field with label, helper and error, empty state. Opening the dialog and returning focus stay in `src/ui/main.js`, because the helpers hold no state.
 5. Build screen 7.7 Not found and screen 7.8 Blocked screen from UI-SPEC.md, and the focus rules of section 8 for them.
 
 **Verify:** `npm test`; the gate. Serve with `python3 -m http.server 8000`. Into `docs/MANUAL-CHECKS.md`:
 - [ ] R-20: put invalid JSON under the invoice-app key and reload, the blocked screen shows, no list and no nav, the stored text is unchanged
 - [ ] R-20: put a document with version 2 under the key and reload, the newer-version text shows with STO-04
 - [ ] R-20: choose Start with empty data, a dialog says the old data will be lost; Cancel keeps the text, confirming replaces it
-- [ ] R-21: with storage access denied in the browser, reload, the unavailable text shows with STO-02 and no stored text is offered
+- [ ] R-20: with storage access denied in the browser, reload, the unavailable text shows with STO-02 and no stored text is offered
+- [ ] R-21: on the blocked screen, run Storage.prototype.removeItem = () => { throw new Error('test'); } in the devtools console, confirm Start with empty data, the banner shows STO-02 and the screen stays
 - [ ] R-22: put a customer name of <b>x</b> in the stored document, nothing on the blocked or not-found screen interprets it
 - [ ] R-28: on the not-found screen, both links reach their lists' routes and the nav shows no current item
 - [ ] R-31: open #/some-private-text, the screen and the title show none of it
@@ -276,6 +281,7 @@ NEEDS HUMAN: `src/ui/views/components.js` is not in the module map of ADR-003; s
 - [ ] UX: every button, link, input and tab shows hover, focus-visible, active and disabled as docs/UI-SPEC.md describes
 - [ ] UX: type and spacing scales respected: every font-size and every margin, padding and gap is a token
 - [ ] UX: each screen of the slice matches its sketch in docs/UI-SPEC.md at 320 px and at desktop width
+- [ ] UX: leaving a form: S9 writes the guard and S11 completes this check with the first real form: type in a form, click Orders, then Keep editing: the text is still there; repeat with the browser's Back
 - [ ] UX: not found: an invented hash shows the screen and no part of the hash
 - [ ] UX: blocked screen: with invalid JSON under the invoice-app key, no list and no nav show; copy works; Start with empty data asks first
 - [ ] UX: all colors: the contrast ratios of section 3 match the browser devtools
@@ -292,7 +298,7 @@ Reopens `styles.css` to add this screen's layout and `src/ui/main.js` to add its
 
 **Steps:**
 1. Build screen 7.1 Customer list and its empty state from UI-SPEC.md, as a table with stacked rows below 64rem.
-2. Wire search on the `input` event so only the results region re-renders, with the `Showing 3 of 12` line.
+2. Wire search on the `input` event so only the results region re-renders, with the `Showing 3 of 12` line and the name compare `src/ui/main.js` passes in.
 3. Add the R-19 note, always shown, and `Erase all data` with its dialog.
 4. Add the route to `src/ui/main.js` and the focus rules of UI-SPEC section 8.
 
@@ -370,7 +376,7 @@ Reopens `styles.css` to add the detail list and the orders table and `src/ui/mai
 
 **Verify:** `npm test`; the gate. Seed orders through devtools. Into `docs/MANUAL-CHECKS.md`:
 - [ ] R-03: the detail shows all fields and the customer's orders with their totals
-- [ ] R-04: on a customer with 3 orders, Delete customer shows no dialog, the banner names 3 orders and that no legal retention applies, and nothing changes; with 1 order the banner says 1 order
+- [ ] R-04: on a customer with 3 orders, Delete customer shows no dialog, the banner names 3 orders, that no legal retention applies, and that deleting those orders and then the customer erases all of this customer's data; nothing changes; with 1 order the banner says 1 order
 - [ ] R-04: on a customer with no orders, a dialog asks first; Cancel keeps the customer, confirming deletes it and lands on the list
 - [ ] R-16: amounts show two decimals and the euro sign, in the browser's language
 - [ ] R-18: a customer with no orders shows No orders for this customer yet. Create the first one. with New order
@@ -435,7 +441,7 @@ Reopens `styles.css` to add the read-only fields and `src/ui/main.js` to add the
 
 **Steps:**
 1. Build screen 7.5 Order form and its empty state from UI-SPEC.md, in its three forms.
-2. Fill the picker from `listCustomers` with `customerLabel`, and the date with today from the injected clock.
+2. Fill the picker from `listCustomers`, with the name compare `src/ui/main.js` passes in, and `customerLabel`, and the date with today from the injected clock.
 3. On Save call the command of S4 and pass the result to `commit`; show field errors and focus the first.
 4. Add the routes to `src/ui/main.js`, with the landings of ADR-005 and the leave-a-form snapshot.
 
@@ -534,17 +540,9 @@ Reopens `styles.css` to add the line form and `src/ui/views/order-view.js` becau
 **Risks:** a disabled button loses focus when the form opens, so the focus moves to Description first, as UI-SPEC section 8 says. The largest amounts must still fit the columns at 64rem.
 
 ## Decisions needed from the human
-D1. May the screens share one extra file for what they all show the same way (banners, the confirmation dialog, form fields, empty states)?
-    Recommended: yes, one file, `src/ui/views/components.js`. Every screen then looks and behaves alike, and a fix lands in one place.
-    Alternative: no extra file. The approved module list stays as it is, but the same pieces are repeated in several screens, or `main.js` grows large, and a fix must be made several times.
-    Answer in: docs/decisions/ADR-003-module-layout.md under "## Answered".
+None.
 
 Critic CRI-2 (advisory): the formatDate test title carried R-31, which is not about dates; retagged to R-28 (done in this draft).
-Critic CRI-3 (advisory): S3 puts `Intl.Collator` in the domain while ADR-003's module map gives `src/ui/format.js` every `Intl` call; confirm the domain Collator in ADR-003 under "## Answered", or leave it to the Risks note of S3.
-Critic CRI-4 (advisory): S9 step 3 bundles the composition root, `commit`, the code table, the error listeners and the leave-a-form guard, and the guard is proven only in S11; either split S9, or add the `UX: leaving a form` line to S9, ticked once S11 is on screen.
-Critic CRI-5 (advisory): the S9 R-21 check tests storage unavailable at load, not a failed save; retag it to R-20 and drop R-21 from S9, or keep it and add a check that a failed Start with empty data shows STO-02 and the screen stays.
-Critic CRI-6 (advisory): S2 covers eight requirements across customers, orders and lines; keep it, or split the line check into a slice of its own that reopens `src/domain/validation.js`.
 Critic CRI-7 (advisory): an S4 test title named two behaviours and one a command cannot show; replaced with `R-06 createOrder with an empty date gives the date error and does not substitute deps.today` (done in this draft).
-Critic CRI-8 (advisory): the first R-04 check of S12 leaves out the sentence that deleting those orders and then the customer erases all of this customer's data; extend the line to name it.
 Critic CRI-9 (advisory): every Verify needs `package.json`, committed by the human before S1; add that precondition to the plan header. It is already committed, so nothing blocks S1.
 Critic CRI-10 (advisory): the S7 Risks line named `shape.js` where the quota path is in `storage.js`; corrected (done in this draft).

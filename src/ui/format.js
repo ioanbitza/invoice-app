@@ -5,13 +5,18 @@ export function formatMoney(cents, locale) {
   const formatter = new Intl.NumberFormat(locale, { style: 'currency', currency: CURRENCY,
     currencyDisplay: 'narrowSymbol',
   });
-  return formatter.format(cents / 100);
+  const whole = Math.trunc(cents / 100);
+  const fraction = String(cents - whole * 100).padStart(2, '0');
+  return formatter.format(`${whole}.${fraction}`);
 }
 
 /** Shows a YYYY-MM-DD date as the calendar day it names, whatever the time zone (UI-SPEC section 4). */
 export function formatDate(isoDate, locale) {
   const formatter = new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeZone: 'UTC' });
-  return formatter.format(new Date(`${isoDate}T00:00:00Z`));
+  const [year, month, day] = isoDate.split('-').map(Number);
+  const date = new Date(0);
+  date.setUTCFullYear(year, month - 1, day);
+  return formatter.format(date);
 }
 
 /** Builds the name order of R-03 once and returns its compare function (ADR-003). */

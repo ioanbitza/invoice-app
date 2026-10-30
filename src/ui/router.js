@@ -55,10 +55,10 @@ const HASH_BUILDERS = {
   'order-new': () => '#/orders/new',
   order: (r) => `#/orders/${r.id}`,
   'order-edit': (r) => `#/orders/${r.id}/edit`,
-  'not-found': () => '#/customers',
 };
 
 export function routeToHash(route) {
+  if (!HASH_BUILDERS[route.name]) throw new Error(`No address for route ${route.name}`);
   return HASH_BUILDERS[route.name](route);
 }
 

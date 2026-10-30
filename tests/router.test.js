@@ -38,7 +38,7 @@ test('R-31 parseRoute keeps no text of an unknown hash in its result', () => {
   const route = parseRoute('#/secret-ana@example.com');
   assert.deepEqual(route, { name: 'not-found' });
   assert.equal(JSON.stringify(route).includes('secret'), false);
-  assert.equal(routeToHash(route).includes('secret'), false);
+  assert.throws(() => routeToHash(route), /not-found/);
 });
 
 test('R-31 the title of every route comes from the frozen table and holds no id', () => {

@@ -66,3 +66,24 @@
 - [ ] UX: every button, link, input and tab shows hover, focus-visible, active and disabled as docs/UI-SPEC.md describes
 - [ ] UX: type and spacing scales respected: every font-size and every margin, padding and gap is a token
 - [ ] UX: each screen of the slice matches its sketch in docs/UI-SPEC.md at 320 px and at desktop width
+
+## S12
+- [ ] R-03: the detail shows all fields and the customer's orders with their totals
+- [ ] R-04: on a customer with 3 orders, Delete customer shows no dialog, the banner names 3 orders, that no legal retention applies, and that deleting those orders and then the customer erases all of this customer's data; nothing changes; with 1 order the banner says 1 order
+- [ ] R-04: on a customer with no orders, a dialog asks first; Cancel keeps the customer, confirming deletes it and lands on the list
+- [ ] R-16: amounts show two decimals and the euro sign, in the browser's language
+- [ ] R-18: a customer with no orders shows No orders for this customer yet. Create the first one. with New order
+- [ ] R-22: seed a customer address of <b>x</b>, the detail shows it literally
+- [ ] R-28: selecting an order row leaves for that order's address; Customers and Orders are reachable
+- [ ] R-29: Export data downloads customer-<id>.json under the CSP, with the purpose, the retention, all this customer's orders and lines, and no other customer's data
+- [ ] UX: keyboard only, from the first field to the outcome, focus visible at every step
+- [ ] UX: 200% browser zoom, nothing cut off, no horizontal scroll
+- [ ] UX: contrast 4.5:1 on text, 3:1 on large text and borders (browser devtools)
+- [ ] UX: empty states: an empty list and an empty form say what to do
+- [ ] UX: a validation error appears next to its field and says how to fix it
+- [ ] UX: 320 px wide, every screen of the slice, no horizontal scroll
+- [ ] UX: design tokens only: no raw color, size or spacing outside :root in styles.css (grep for "#", "rgb(", "px" outside the token block)
+- [ ] UX: every button, link, input and tab shows hover, focus-visible, active and disabled as docs/UI-SPEC.md describes
+- [ ] UX: type and spacing scales respected: every font-size and every margin, padding and gap is a token
+- [ ] UX: each screen of the slice matches its sketch in docs/UI-SPEC.md at 320 px and at desktop width
+- [ ] UX: customer detail: Delete with orders shows the warning with the count and no dialog; Export data downloads customer-<id>.json under the CSP

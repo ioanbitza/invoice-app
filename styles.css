@@ -442,3 +442,64 @@ dialog p { overflow-wrap: anywhere; }
   .table-customers .col-email { width: 60%; }
   .table-customers .row-open { overflow-wrap: normal; }
 }
+
+/* Customer detail */
+.detail-actions { display: flex; flex-direction: column; gap: var(--space-2); }
+.detail-actions .button { width: 100%; }
+.detail-list { display: grid; grid-template-columns: 1fr; gap: var(--space-3); margin: 0; }
+.detail-item { display: flex; flex-direction: column; gap: var(--space-1); min-width: 0; }
+.detail-term { font-size: var(--text-sm); font-weight: var(--weight-bold); color: var(--color-text-muted); }
+.detail-value { margin: 0; color: var(--color-text); overflow-wrap: anywhere; white-space: pre-wrap; }
+.detail-value.cell-muted { color: var(--color-text-muted); }
+
+.table-orders,
+.table-orders tbody,
+.table-orders td { display: block; }
+.table-orders thead {
+  position: absolute;
+  width: var(--border-width);
+  height: var(--border-width);
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.table-orders tr {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-1) var(--space-3);
+  height: auto;
+  min-height: var(--row-height-touch);
+  padding: var(--space-3);
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+.table-orders td { padding: 0; border: 0; overflow-wrap: anywhere; }
+.table-orders .col-number { grid-column: 1; grid-row: 1; }
+.table-orders .col-total { grid-column: 2; grid-row: 1; }
+.table-orders .col-date { grid-column: 1; grid-row: 2; color: var(--color-text-muted); }
+
+@media (min-width: 64rem) {
+  .detail-actions { flex-direction: row; }
+  .detail-actions .button { width: auto; }
+  .detail-list { grid-template-columns: repeat(3, 1fr); }
+  .table-orders { display: table; table-layout: fixed; }
+  .table-orders thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    display: table-header-group;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
+  }
+  .table-orders tbody { display: table-row-group; }
+  .table-orders tr { display: table-row; height: var(--row-height); min-height: 0; padding: 0; border-bottom: 0; }
+  .table-orders td {
+    display: table-cell;
+    padding: var(--space-2) var(--space-3);
+    border-bottom: var(--border-width) solid var(--color-border);
+  }
+  .table-orders .col-date { width: 30%; color: var(--color-text); }
+  .table-orders .col-number { width: 40%; }
+  .table-orders .col-total { width: 30%; text-align: right; }
+}

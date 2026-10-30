@@ -3,6 +3,7 @@ import { createNameCompare } from './format.js';
 import { parseRoute, routeTitle } from './router.js';
 import { banner, bannerRegion, fillDialog, setBanner } from './views/components.js';
 import { renderBlocked } from './views/blocked.js';
+import { renderCustomerDetail } from './views/customer-detail.js';
 import { renderCustomerForm } from './views/customer-form.js';
 import { renderCustomerList } from './views/customer-list.js';
 import { renderNotFound } from './views/not-found.js';
@@ -40,7 +41,7 @@ const state = { data: null, blocked: null, route: null, form: null, searchCustom
 let renderedHash = null;
 
 /** Screens by route name; a route with no screen yet renders the not-found screen. */
-const SCREENS = { customers: renderCustomerList, 'customer-new': renderCustomerForm, 'customer-edit': renderCustomerForm };
+const SCREENS = { customers: renderCustomerList, customer: renderCustomerDetail, 'customer-new': renderCustomerForm, 'customer-edit': renderCustomerForm };
 const deps = { newId: () => crypto.randomUUID() };
 
 function bannerFor(code) {

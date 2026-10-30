@@ -335,5 +335,28 @@
     "CON": 11,
     "VER": 6
   },
-  "renderedAt": "2026-10-28T11:44:37.084Z"
+  "renderedAt": "2026-10-28T11:44:37.084Z",
+  "equivalent": [
+    {
+      "file": "src/domain/customers.js",
+      "line": 17,
+      "from": ">",
+      "to": ">=",
+      "why": "Only the domain.length > 0 operand can survive. The local operand is killed by the @b.com refusal test. A domain that passes includes(.) && !startsWith(.) && !endsWith(.) is already at least 3 characters long, so domain.length >= 0 accepts the same inputs."
+    },
+    {
+      "file": "src/domain/customers.js",
+      "line": 17,
+      "from": "0",
+      "to": "1",
+      "why": "Same reasoning. local.length > 1 would refuse a@b.c, which a test accepts, so it is caught. domain.length > 1 is implied by the dot rules, because a valid domain has at least 3 characters."
+    },
+    {
+      "file": "src/domain/orders.js",
+      "line": 45,
+      "from": "<",
+      "to": "<=",
+      "why": "Line 45 runs only when a.date !== b.date, so a.date < b.date and a.date <= b.date give the same result."
+    }
+  ]
 }

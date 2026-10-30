@@ -75,6 +75,12 @@ test('R-05 searchCustomers trims, ignores case, matches name or email only', () 
   assert.equal(searchCustomers(data, '   ', byName).length, 3);
 });
 
+test('R-05 searchCustomers returns matches in the order of the compare function, not insertion order', () => {
+  const data = dataWith([aCustomer({ id: 'c1', name: 'Ana' }), aCustomer({ id: 'c2', name: 'Bob', email: 'bob@ana.ro' })]);
+  const descending = (a, b) => ascending(b, a);
+  assert.deepEqual(searchCustomers(data, 'ana', descending).map((c) => c.id), ['c2', 'c1']);
+});
+
 test('R-06 customerLabel shows the email or (no email)', () => {
   assert.equal(customerLabel(aCustomer({ email: 'ana@example.com' })), 'Ana Pop (ana@example.com)');
   assert.equal(customerLabel(aCustomer()), 'Ana Pop (no email)');

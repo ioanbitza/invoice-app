@@ -65,13 +65,15 @@ function customerField(setup, values, errors) {
       error: errorOf(errors, 'customerId'),
     });
   }
-  return field({
+  const fixed = field({
     id: 'order-customerId',
     label: 'Customer',
     required: false,
     control: readOnlyInput(setup.customerText),
     helper: setup.isEdit ? 'To move an order, delete it and create a new one.' : '',
   });
+  fixed.querySelector('label').textContent = 'Customer';
+  return fixed;
 }
 
 function buildForm(setup, values, errors, onCancel) {

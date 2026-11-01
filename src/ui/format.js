@@ -14,8 +14,8 @@ export function formatMoney(cents, locale) {
 export function formatDate(isoDate, locale) {
   const formatter = new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeZone: 'UTC' });
   const [year, month, day] = isoDate.split('-').map(Number);
-  const date = new Date(0);
-  date.setUTCFullYear(year, month - 1, day);
+  const date = new Date(Date.UTC(year, month - 1, day));
+  date.setUTCFullYear(year);
   return formatter.format(date);
 }
 

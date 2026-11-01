@@ -71,10 +71,9 @@ let renderedHash = null;
 /** Screens by route name; a route with no screen yet renders the not-found screen. */
 const SCREENS = { customers: renderCustomerList, customer: renderCustomerDetail, 'customer-new': renderCustomerForm, 'customer-edit': renderCustomerForm, orders: renderOrderList,
   'order-new': renderOrderForm, 'customer-order-new': renderOrderForm, 'order-edit': renderOrderForm, order: renderOrderView };
-/** `today` is read on every use, so a page left open past midnight does not keep yesterday (ADR-003, ADR-007). `now` stays for views that still read the clock. */
+/** `today` is read on every use, so a page left open past midnight does not keep yesterday (ADR-003, ADR-007). */
 const deps = {
   newId: () => crypto.randomUUID(),
-  now: () => Date.now(),
   get today() {
     return todayIso(() => Date.now());
   },

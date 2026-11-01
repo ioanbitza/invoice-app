@@ -1,5 +1,4 @@
 import { customerLabel, listCustomers } from '../../domain/customers.js';
-import { todayIso } from '../../domain/dates.js';
 import { createOrder, updateOrder } from '../../domain/orders.js';
 import { routeToHash } from '../router.js';
 import { actionButton, element, emptyState, field, heading, linkButton, panel } from './components.js';
@@ -76,20 +75,24 @@ function customerField(setup, values, errors) {
   return fixed;
 }
 
+function numberField(setup) {
+  const fixed = field({
+    id: 'order-number',
+    label: 'Number',
+    required: false,
+    control: readOnlyInput(setup.number, 'mono'),
+    helper: 'The number does not change.',
+  });
+  fixed.querySelector('label').textContent = 'Number';
+  return fixed;
+}
+
 function buildForm(setup, values, errors, onCancel) {
   const form = element('form');
   form.noValidate = true;
   form.autocomplete = 'off';
   const parts = [];
-  if (setup.isEdit) {
-    parts.push(field({
-      id: 'order-number',
-      label: 'Number',
-      required: false,
-      control: readOnlyInput(setup.number, 'mono'),
-      helper: 'The number does not change.',
-    }));
-  }
+  if (setup.isEdit) parts.push(numberField(setup));
   parts.push(
     customerField(setup, values, errors),
     field({ id: 'order-date', label: 'Date', required: true, control: dateControl(values.date), error: errorOf(errors, 'date') }),
@@ -157,7 +160,7 @@ function savedHash(route, after) {
 /** Screen 7.5: start an order or change its date and notes; a failed save keeps what was typed (R-06, R-07, R-17, R-18, R-21). */
 export function renderOrderForm(container, context) {
   const { route, state, commit, showBanner, deps } = context;
-  const setup = setupFor(route, state.data, context.compareNames, todayIso(deps.now));
+  const setup = setupFor(route, state.data, context.compareNames, deps.today);
   if (setup === null) return renderNotFound(container);
   const h1 = heading(route.name === 'order-edit' ? 'Edit order' : 'New order');
   const box = panel('panel-form');
@@ -196,13 +199,11 @@ export function renderOrderForm(container, context) {
       renderNotFound(container);
       return;
     }
-    const saved = commit(result.data);
+    const saved = commit(result.data, savedHash(route, result.data));
     if (!saved.ok) {
       showBanner(saved.code);
-      return;
+      form.querySelector('[type=submit]').focus();
     }
-    state.form = null;
-    location.hash = savedHash(route, result.data);
   }
 
   show(setup.start, []);

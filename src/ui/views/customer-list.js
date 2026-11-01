@@ -52,30 +52,28 @@ function customerTable(customers) {
   return table;
 }
 
-function resultsPanel(matches, onClear) {
+function resultsPanel(matches) {
   const box = panel('panel-table');
   if (matches.length > 0) {
     box.append(customerTable(matches));
     return box;
   }
-  const empty = emptyState({
-    text: 'No customers match this search.',
-    action: { label: 'Clear search', variant: 'secondary', name: 'clear-search' },
-  });
-  empty.querySelector('button').addEventListener('click', onClear);
-  box.append(empty);
+  box.append(
+    emptyState({
+      text: 'No customers match this search.',
+      action: { label: 'Clear search', variant: 'secondary', name: 'clear-search' },
+    }),
+  );
   return box;
 }
 
-function buildNote(eraseAll) {
+function buildNote() {
   const row = element('div', 'data-note');
-  const erase = actionButton('Erase all data', 'destructive-quiet', 'erase-all');
-  erase.addEventListener('click', () => eraseAll(erase));
-  row.append(element('p', 'note-text', NOTE), erase);
+  row.append(element('p', 'note-text', NOTE), actionButton('Erase all data', 'destructive-quiet', 'erase-all'));
   return row;
 }
 
-function buildEmpty(context) {
+function buildEmpty(actions) {
   const h1 = heading('Customers');
   const box = panel('panel-table');
   box.append(
@@ -84,55 +82,67 @@ function buildEmpty(context) {
       action: { label: 'New customer', variant: 'primary', href: NEW_CUSTOMER_HREF },
     }),
   );
-  return { h1, nodes: [h1, context.bannerRegion(), box, buildNote(context.eraseAll)] };
+  return { h1, nodes: [h1, actions.bannerRegion(), box, buildNote()] };
 }
 
-function buildSearch(state) {
+function buildSearch(searchText) {
   const wrapper = element('div', 'field search');
   const label = element('label', 'field-label', 'Search customers');
   label.htmlFor = 'search-customers';
   const input = element('input');
   input.type = 'search';
   input.id = 'search-customers';
-  input.value = state.searchCustomers;
+  input.value = searchText;
   const status = element('p', 'search-count');
   status.setAttribute('role', 'status');
   wrapper.append(label, input, status);
   return { wrapper, input, status };
 }
 
-function buildList(context) {
-  const { state, compareNames } = context;
-  const total = state.data.customers.length;
+function buildList(viewModel, actions) {
+  const { data, searchText } = viewModel;
+  const total = data.customers.length;
   const h1 = heading('Customers');
   const titleRow = element('div', 'title-row');
   titleRow.append(h1, linkButton('New customer', NEW_CUSTOMER_HREF, 'primary'));
-  const { wrapper, input, status } = buildSearch(state);
+  const { wrapper, input, status } = buildSearch(searchText);
   const results = element('div', 'results');
 
-  function showResults() {
-    const text = state.searchCustomers;
-    const matches = searchCustomers(state.data, text, compareNames);
+  function showResults(text) {
+    const matches = searchCustomers(data, text, actions.compareNames);
     status.textContent = text.trim() === '' ? '' : `Showing ${matches.length} of ${total}`;
-    results.replaceChildren(resultsPanel(matches, clearSearch));
+    results.replaceChildren(resultsPanel(matches));
   }
-  function clearSearch() {
-    state.searchCustomers = '';
-    input.value = '';
-    showResults();
-    input.focus();
-  }
-  input.addEventListener('input', () => {
-    state.searchCustomers = input.value;
-    showResults();
-  });
-  showResults();
-  return { h1, nodes: [titleRow, context.bannerRegion(), wrapper, results, buildNote(context.eraseAll)] };
+  showResults(searchText);
+  return { h1, input, showResults, nodes: [titleRow, actions.bannerRegion(), wrapper, results, buildNote()] };
+}
+
+function clearSearch(built, actions) {
+  actions.setSearch('');
+  built.input.value = '';
+  built.showResults('');
+  built.input.focus();
+}
+
+/** One delegated click listener per screen root (ADR-003). */
+function onClick(event, built, actions) {
+  const button = event.target.closest('button[data-action]');
+  if (!button) return;
+  if (button.dataset.action === 'erase-all') actions.eraseAll(button);
+  if (button.dataset.action === 'clear-search') clearSearch(built, actions);
 }
 
 /** Screen 7.1: customers by name, a search that re-renders only the results, the data note and Erase all data. */
-export function renderCustomerList(container, context) {
-  const built = context.state.data.customers.length > 0 ? buildList(context) : buildEmpty(context);
-  container.replaceChildren(...built.nodes);
+export function renderCustomerList(container, viewModel, actions) {
+  const built = viewModel.data.customers.length > 0 ? buildList(viewModel, actions) : buildEmpty(actions);
+  const root = element('div', 'customer-list');
+  root.append(...built.nodes);
+  root.addEventListener('click', (event) => onClick(event, built, actions));
+  root.addEventListener('input', (event) => {
+    if (event.target !== built.input) return;
+    actions.setSearch(built.input.value);
+    built.showResults(built.input.value);
+  });
+  container.replaceChildren(root);
   return built.h1;
 }

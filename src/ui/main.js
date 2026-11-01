@@ -69,8 +69,14 @@ const state = { data: null, blocked: null, route: null, form: null, searchCustom
 let renderedHash = null;
 
 /** Screens by route name; a route with no screen yet renders the not-found screen. */
-const SCREENS = { customers: renderCustomerList, customer: renderCustomerDetail, 'customer-new': renderCustomerForm, 'customer-edit': renderCustomerForm, orders: renderOrderList,
+const SCREENS = { customers: renderCustomerScreen, customer: renderCustomerDetail, 'customer-new': renderCustomerForm, 'customer-edit': renderCustomerForm, orders: renderOrderList,
   'order-new': renderOrderForm, 'customer-order-new': renderOrderForm, 'order-edit': renderOrderForm, order: renderOrderScreen };
+/** The customer list gets a view model and actions (ADR-003); the search text lives in state across renders. */
+function renderCustomerScreen(container) {
+  const viewModel = { data: state.data, searchText: state.searchCustomers };
+  const actions = { compareNames, bannerRegion, eraseAll, setSearch: (text) => { state.searchCustomers = text; } };
+  return renderCustomerList(container, viewModel, actions);
+}
 /** The order screen gets a view model and actions (ADR-003); `data` is read live because commit replaces it. */
 function renderOrderScreen(container, { route }) {
   const viewModel = { route, locale: LOCALE, get data() { return state.data; } };

@@ -101,8 +101,7 @@ function buildSearch(state) {
 }
 
 function buildList(context) {
-  const { state } = context;
-  const locale = navigator.language;
+  const { state, locale } = context;
   const total = state.data.orders.length;
   const h1 = heading('Orders');
   const titleRow = element('div', 'title-row');

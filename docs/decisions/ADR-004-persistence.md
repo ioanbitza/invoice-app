@@ -1,6 +1,6 @@
 # ADR-004: Persistence and schema versioning
 
-Date: 2026-10-30. Status: accepted. Author: architect, accepted by Ioan Bita.
+Date: 2026-10-30. Status: accepted (2026-11-02, F-10 answered). Author: architect, accepted by Ioan Bita.
 Tags: javascript, browser, localstorage, storage
 
 ## Context
@@ -65,3 +65,4 @@ The brief mandates `localStorage`, and R-19, R-20, R-21 and R-32 say what must h
 - Which origin holds the key: ADR-008.
 
 ## Answered
+Q: F-10. The shape check accepts a stored nextOrderNumber at the top of the safe range although the next write would exceed it.  A (2026-11-02, Ioan Bita): "Accepted as a limit. Only hand-edited data reaches that value; the app never gets there by creating orders. The F-50 test pins the top value and nothing else changes."

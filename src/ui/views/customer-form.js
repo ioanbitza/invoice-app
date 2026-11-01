@@ -32,7 +32,7 @@ function readValues(form) {
   return values;
 }
 
-function buildForm(values, errors, cancelHref, onCancel) {
+function buildForm(values, errors, cancelHref) {
   const form = element('form');
   form.noValidate = true;
   form.autocomplete = 'off';
@@ -42,7 +42,7 @@ function buildForm(values, errors, cancelHref, onCancel) {
   const save = actionButton('Save customer', 'primary');
   save.type = 'submit';
   const cancel = linkButton('Cancel', cancelHref, 'secondary');
-  cancel.addEventListener('click', onCancel);
+  cancel.dataset.action = 'cancel';
   buttons.append(save, cancel);
   form.append(fieldFor('name', 'Name', true, values, errors), pair, fieldFor('address', 'Address', false, values, errors), buttons);
   return form;
@@ -70,34 +70,38 @@ function runSave(route, data, values, deps) {
 }
 
 /** Screen 7.2: create or edit a customer; errors show at once, a failed save keeps what was typed (R-01, R-02, R-17, R-21). */
-export function renderCustomerForm(container, context) {
-  const { route, state, commit, showBanner, deps } = context;
-  const snapshot = startValues(route, state.data);
+export function renderCustomerForm(container, viewModel, actions) {
+  const { route } = viewModel;
+  const { commit, showBanner, deps, setForm } = actions;
+  const snapshot = startValues(route, viewModel.data);
   if (snapshot === null) return renderNotFound(container);
   const where = targets(route);
   const h1 = heading(route.name === 'customer-new' ? 'New customer' : 'Edit customer');
   const box = panel('panel-form');
-  const region = context.bannerRegion();
+  const region = actions.bannerRegion();
   let form = null;
   let lastFocused = null;
 
   function show(values, errors) {
-    const next = buildForm(values, errors, where.cancel, () => {
-      state.form = null;
-    });
+    const next = buildForm(values, errors, where.cancel);
     if (form) form.replaceWith(next);
     else box.append(next);
     form = next;
-    form.addEventListener('submit', onSubmit);
-    form.addEventListener('focusin', (event) => {
-      lastFocused = event.target.id;
-    });
   }
+
+  /** One delegated listener per event type on the panel, which outlives every re-drawn form (ADR-003). */
+  box.addEventListener('submit', onSubmit);
+  box.addEventListener('focusin', (event) => {
+    lastFocused = event.target.id;
+  });
+  box.addEventListener('click', (event) => {
+    if (event.target.closest('a[data-action="cancel"]')) setForm(null);
+  });
 
   function onSubmit(event) {
     event.preventDefault();
     const values = readValues(form);
-    const result = runSave(route, state.data, values, deps);
+    const result = runSave(route, viewModel.data, values, deps);
     if (!result.ok && result.errors) {
       show(values, result.errors);
       form.querySelector(`#customer-${result.errors[0].field}`).focus();
@@ -116,14 +120,14 @@ export function renderCustomerForm(container, context) {
 
   show(snapshot, []);
   box.prepend(region);
-  state.form = {
+  setForm({
     hash: location.hash,
     isDirty: () => FIELDS.some((name) => form.elements[name].value !== snapshot[name]),
     restoreFocus: () => {
       const target = lastFocused ? document.getElementById(lastFocused) : form.elements.name;
       target.focus();
     },
-  };
+  });
   container.replaceChildren(h1, box);
   return h1;
 }

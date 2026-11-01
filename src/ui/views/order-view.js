@@ -191,16 +191,16 @@ function buildTop(order, h1) {
 }
 
 /** Screen 7.6: an order's details, lines and total, with delete and the line form (R-08, R-11 to R-15, R-17, R-18, R-21). */
-export function renderOrderView(container, context) {
-  const { route, state, commit, openDialog, showBanner, deps } = context;
-  const order = state.data.orders.find((item) => item.id === route.id);
+export function renderOrderView(container, viewModel, actions) {
+  const { route, locale } = viewModel;
+  const { commit, openDialog, showBanner, setForm, deps } = actions;
+  const order = viewModel.data.orders.find((item) => item.id === route.id);
   if (!order) return renderNotFound(container);
-  const customer = state.data.customers.find((item) => item.id === order.customerId);
-  const locale = navigator.language;
+  const customer = viewModel.data.customers.find((item) => item.id === order.customerId);
   const h1 = heading(order.number);
   h1.classList.add('cell-mono');
   const { titleRow, deleteButton } = buildTop(order, h1);
-  const currentOrder = () => state.data.orders.find((item) => item.id === route.id);
+  const currentOrder = () => viewModel.data.orders.find((item) => item.id === route.id);
   const ui = { open: false, editing: null, start: null, opener: null, lastFocused: null, form: null, save: null };
   const addButton = actionButton('Add line', 'primary', 'add-line');
   const linesRow = element('div', 'title-row');
@@ -208,7 +208,7 @@ export function renderOrderView(container, context) {
   const linesHolder = element('div', 'lines-holder');
   const totalHolder = element('div', 'total-holder');
   const formHolder = element('div', 'form-holder');
-  const pageBanner = context.bannerRegion();
+  const pageBanner = actions.bannerRegion();
   const root = element('div', 'order-view');
 
   function drawLines() {
@@ -248,7 +248,7 @@ export function renderOrderView(container, context) {
     ui.lastFocused = 'line-description';
     drawLines();
     showForm(ui.start, []);
-    state.form = { hash: location.hash, isDirty, restoreFocus: () => (document.getElementById(ui.lastFocused) ?? document.getElementById('line-description')).focus() };
+    setForm({ hash: location.hash, isDirty, restoreFocus: () => (document.getElementById(ui.lastFocused) ?? document.getElementById('line-description')).focus() });
     document.getElementById('line-description').focus();
   }
 
@@ -257,7 +257,7 @@ export function renderOrderView(container, context) {
     ui.editing = null;
     ui.form = null;
     ui.region = null;
-    state.form = null;
+    setForm(null);
     formHolder.replaceChildren();
     pageBanner.replaceChildren();
     drawLines();
@@ -276,8 +276,8 @@ export function renderOrderView(container, context) {
 
   function runLine(values) {
     const input = { orderId: route.id, ...values };
-    if (ui.editing) return updateLine(state.data, { ...input, lineId: ui.editing }, deps);
-    return addLine(state.data, input, deps);
+    if (ui.editing) return updateLine(viewModel.data, { ...input, lineId: ui.editing }, deps);
+    return addLine(viewModel.data, input, deps);
   }
 
   function onSubmit(event) {
@@ -305,7 +305,7 @@ export function renderOrderView(container, context) {
   }
 
   function removeOne(lineId) {
-    const result = removeLine(state.data, { orderId: route.id, lineId }, deps);
+    const result = removeLine(viewModel.data, { orderId: route.id, lineId }, deps);
     if (!result.ok) {
       renderNotFound(container).focus();
       return;
@@ -326,7 +326,7 @@ export function renderOrderView(container, context) {
   }
 
   function askDelete() {
-    const result = deleteOrder(state.data, { id: order.id }, deps);
+    const result = deleteOrder(viewModel.data, { id: order.id }, deps);
     if (!result.ok) {
       renderNotFound(container).focus();
       return;

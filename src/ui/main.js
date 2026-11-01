@@ -70,7 +70,14 @@ let renderedHash = null;
 
 /** Screens by route name; a route with no screen yet renders the not-found screen. */
 const SCREENS = { customers: renderCustomerList, customer: renderCustomerDetail, 'customer-new': renderCustomerForm, 'customer-edit': renderCustomerForm, orders: renderOrderList,
-  'order-new': renderOrderForm, 'customer-order-new': renderOrderForm, 'order-edit': renderOrderForm, order: renderOrderView };
+  'order-new': renderOrderForm, 'customer-order-new': renderOrderForm, 'order-edit': renderOrderForm, order: renderOrderScreen };
+/** The order screen gets a view model and actions (ADR-003); `data` is read live because commit replaces it. */
+function renderOrderScreen(container, { route }) {
+  const viewModel = { route, locale: LOCALE, get data() { return state.data; } };
+  const actions = { commit, openDialog, showBanner, bannerRegion, deps, setForm: (form) => { state.form = form; } };
+  return renderOrderView(container, viewModel, actions);
+}
+
 /** `today` is read on every use, so a page left open past midnight does not keep yesterday (ADR-003, ADR-007). */
 const deps = {
   newId: () => crypto.randomUUID(),

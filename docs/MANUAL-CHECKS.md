@@ -47,6 +47,8 @@
 - [ ] R-22: seed a customer named <b>x</b> and search for <b>x</b>, the text shows literally in the row
 - [ ] R-28: Customers and Orders are reachable from this screen, the Customers link is marked current
 - [ ] R-32: press Erase all data, the dialog says all customers and orders will be gone for good; Cancel changes nothing, confirming empties the list and the invoice-app key is gone
+- [ ] R-01: type a name in Search customers, open Add customer, save a name only, the list shows the new customer and the search box is empty
+- [ ] R-04: type a customer's name in Search customers and in Search orders, delete that customer's orders, then the customer, the list shows without that customer and both search boxes are empty
 - [ ] UX: keyboard only, from the first field to the outcome, focus visible at every step
 - [ ] UX: 200% browser zoom, nothing cut off, no horizontal scroll
 - [ ] UX: contrast 4.5:1 on text, 3:1 on large text and borders (browser devtools)

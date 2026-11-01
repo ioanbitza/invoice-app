@@ -51,7 +51,7 @@ export function renderBlocked(container, model, actions) {
   const h1 = heading(title);
   const box = panel('panel-form');
   const region = bannerRegion();
-  box.append(region, element('p', '', text), buildActions(model.reason));
+  box.append(h1, region,element('p', '', text), buildActions(model.reason));
   box.addEventListener('click', (event) => {
     const button = event.target.closest('button[data-action]');
     if (!button) return;
@@ -65,6 +65,6 @@ export function renderBlocked(container, model, actions) {
       });
     }
   });
-  container.replaceChildren(element('p', 'app-name', 'Invoice app'), h1, box);
+  container.replaceChildren(element('p', 'app-name', 'Invoice app'), box);
   return h1;
 }

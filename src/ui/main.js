@@ -98,6 +98,7 @@ function commit(nextData, hash, { replace = false } = {}) {
   if (!saved.ok) return { ok: false, code: SAVE_FAILURE_CODES[saved.reason] };
   state.data = nextData;
   if (state.route?.name === 'customer-new' || customerWasDeleted(nextData)) state.searchCustomers = '';
+  if (customerWasDeleted(nextData)) state.searchOrders = '';
   if (hash !== undefined) goTo(hash, replace);
   return { ok: true };
 }

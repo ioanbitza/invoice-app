@@ -124,7 +124,7 @@ function buildTop(customer, h1) {
   actions.append(linkButton('Edit customer', editHref, 'secondary'), exportButton, deleteButton);
   const titleRow = element('div', 'title-row');
   titleRow.append(h1, actions);
-  return { titleRow, exportButton, deleteButton };
+  return { titleRow };
 }
 
 /** Screen 7.3: one customer's fields and orders, with delete (R-04) and export (R-29). */
@@ -136,25 +136,21 @@ export function renderCustomerDetail(container, context) {
   const newOrderHref = routeToHash({ name: 'customer-order-new', id: customer.id });
   const region = context.bannerRegion();
   const h1 = heading(customer.name);
-  const { titleRow, exportButton, deleteButton } = buildTop(customer, h1);
+  const { titleRow } = buildTop(customer, h1);
 
   const ordersRow = element('div', 'title-row');
   ordersRow.append(element('h2', '', 'Orders'));
   if (rows.length > 0) ordersRow.append(linkButton('New order', newOrderHref, 'primary'));
-
-  exportButton.addEventListener('click', () => {
-    if (!downloadExport(state.data, customer.id)) renderNotFound(container).focus();
-  });
 
   function confirmDelete(result) {
     const saved = commit(result.data, routeToHash({ name: 'customers' }), { replace: true });
     if (!saved.ok) showBanner(saved.code);
   }
 
-  deleteButton.addEventListener('click', () => {
+  function onDelete(button) {
     const result = deleteCustomer(state.data, { id: customer.id }, deps);
     if (result.ok) {
-      openDialog(DELETE_DIALOG, deleteButton, { onConfirm: () => confirmDelete(result) });
+      openDialog(DELETE_DIALOG, button, { onConfirm: () => confirmDelete(result) });
       return;
     }
     if (result.reason === 'customer-has-orders') {
@@ -162,9 +158,22 @@ export function renderCustomerDetail(container, context) {
       return;
     }
     renderNotFound(container).focus();
-  });
+  }
+
+  /** One delegated click listener per screen root (ADR-003). */
+  function onClick(event) {
+    const button = event.target.closest('button[data-action]');
+    if (!button) return;
+    if (button.dataset.action === 'delete') onDelete(button);
+    if (button.dataset.action === 'export' && !downloadExport(state.data, customer.id)) {
+      renderNotFound(container).focus();
+    }
+  }
 
   const ordersBox = rows.length > 0 ? ordersTable(rows, locale) : ordersEmpty(newOrderHref);
-  container.replaceChildren(titleRow, region, details(customer), ordersRow, ordersBox);
+  const root = element('div', 'customer-detail');
+  root.append(titleRow, region, details(customer), ordersRow, ordersBox);
+  root.addEventListener('click', onClick);
+  container.replaceChildren(root);
   return h1;
 }

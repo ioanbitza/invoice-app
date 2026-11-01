@@ -63,6 +63,7 @@
 
 ## S11
 - [ ] R-01: save a name only, the customer appears in the list; save with email ab.c, the error shows and nothing is saved
+- [ ] R-01: type a name in Search customers, press Add customer, fill a name and a valid email and save, the list shows the new customer with the search box empty (review F-63; S10 covers the name-only case)
 - [ ] R-02: edit a customer with an invalid email, the old values stay; edit with valid values, the list shows them
 - [ ] R-17: leave the name empty and give a bad email, both messages show next to their fields, focus is on Name; Cancel discards and the saved values stay
 - [ ] R-21: fill localStorage from devtools until a save fails, the form stays filled and shows STO-01; free space and press Save again, it saves

@@ -597,6 +597,7 @@ dialog p { overflow-wrap: anywhere; }
 
 .order-view { display: flex; flex-direction: column; gap: var(--space-5); }
 .customer-list { display: flex; flex-direction: column; gap: var(--space-5); }
+.customer-detail { display: flex; flex-direction: column; gap: var(--space-5); }
 
 .line-form {
   margin-top: var(--space-4);

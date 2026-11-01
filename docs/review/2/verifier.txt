@@ -1,0 +1,13 @@
+Model: claude-fable-5-1 (Fable 5.1)
+Gate: GATE PASS, 457 passed, 0 failed
+Mutations: 296 planted, 282 caught, 14 survived
+  survived: src/domain/customers.js:4 "<" -> "<="
+  survived: src/domain/customers.js:4 "1" -> "2"
+  survived: src/domain/customers.js:4 ">" -> ">="
+  survived: src/domain/customers.js:4 "1" -> "2"
+  survived: src/domain/customers.js:4 "0" -> "1"
+  survived: src/domain/lines.js:20 "+" -> "-"
+  survived: src/domain/orders.js:15 "<" -> "<="
+  survived: src/storage/shape.js:4 "-" -> "+"
+  survived: src/storage/shape.js:14 ">=" -> ">"
+  survived: src/storage/shape.js:14 "0" -> "1"

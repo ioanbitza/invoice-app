@@ -87,7 +87,7 @@ function numberField(setup) {
   return fixed;
 }
 
-function buildForm(setup, values, errors, onCancel) {
+function buildForm(setup, values, errors) {
   const form = element('form');
   form.noValidate = true;
   form.autocomplete = 'off';
@@ -102,7 +102,7 @@ function buildForm(setup, values, errors, onCancel) {
   const save = actionButton('Save order', 'primary');
   save.type = 'submit';
   const cancel = linkButton('Cancel', setup.cancel, 'secondary');
-  cancel.addEventListener('click', onCancel);
+  cancel.dataset.action = 'cancel';
   buttons.append(save, cancel);
   form.append(...parts, buttons);
   return form;
@@ -158,9 +158,10 @@ function savedHash(route, after) {
 }
 
 /** Screen 7.5: start an order or change its date and notes; a failed save keeps what was typed (R-06, R-07, R-17, R-18, R-21). */
-export function renderOrderForm(container, context) {
-  const { route, state, commit, showBanner, deps } = context;
-  const setup = setupFor(route, state.data, context.compareNames, deps.today);
+export function renderOrderForm(container, viewModel, actions) {
+  const { route, compareNames } = viewModel;
+  const { commit, showBanner, setForm, deps } = actions;
+  const setup = setupFor(route, viewModel.data, compareNames, deps.today);
   if (setup === null) return renderNotFound(container);
   const h1 = heading(route.name === 'order-edit' ? 'Edit order' : 'New order');
   const box = panel('panel-form');
@@ -169,27 +170,21 @@ export function renderOrderForm(container, context) {
     container.replaceChildren(h1, box);
     return h1;
   }
-  const region = context.bannerRegion();
+  const region = actions.bannerRegion();
   let form = null;
   let lastFocused = null;
 
   function show(values, errors) {
-    const next = buildForm(setup, values, errors, () => {
-      state.form = null;
-    });
+    const next = buildForm(setup, values, errors);
     if (form) form.replaceWith(next);
     else box.append(next);
     form = next;
-    form.addEventListener('submit', onSubmit);
-    form.addEventListener('focusin', (event) => {
-      lastFocused = event.target.id;
-    });
   }
 
   function onSubmit(event) {
     event.preventDefault();
     const values = readValues(form, setup);
-    const result = runSave(route, state.data, values, deps);
+    const result = runSave(route, viewModel.data, values, deps);
     if (!result.ok && result.errors) {
       show(values, result.errors);
       form.querySelector(`#order-${result.errors[0].field}`).focus();
@@ -206,9 +201,16 @@ export function renderOrderForm(container, context) {
     }
   }
 
+  box.addEventListener('submit', onSubmit);
+  box.addEventListener('focusin', (event) => {
+    lastFocused = event.target.id;
+  });
+  box.addEventListener('click', (event) => {
+    if (event.target.closest('a[data-action="cancel"]')) setForm(null);
+  });
   show(setup.start, []);
   box.prepend(region);
-  state.form = {
+  setForm({
     hash: location.hash,
     isDirty: () => {
       const now = readValues(form, setup);
@@ -218,7 +220,7 @@ export function renderOrderForm(container, context) {
       const target = lastFocused ? document.getElementById(lastFocused) : form.querySelector('select, input[name="date"]');
       target.focus();
     },
-  };
+  });
   container.replaceChildren(h1, box);
   return h1;
 }

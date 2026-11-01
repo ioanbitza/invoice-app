@@ -13,12 +13,18 @@ function memory(initial = {}) {
 
 const data = { nextOrderNumber: 1, customers: [], orders: [] };
 
+const filled = {
+  nextOrderNumber: 3,
+  customers: [{ id: 'c1', name: 'Ana', email: '', phone: '', address: '' }],
+  orders: [{ id: 'o1', number: 'ORD-0002', customerId: 'c1', date: '2026-10-30', notes: '', lines: [] }],
+};
+
 test('R-19 save then load through a new storage gives the same data', () => {
   const backing = memory();
   const first = createStorage(backing);
   first.load();
-  first.save(data);
-  assert.deepEqual(createStorage(backing).load(), { ok: true, data });
+  first.save(filled);
+  assert.deepEqual(createStorage(backing).load(), { ok: true, data: filled });
 });
 
 test('R-20 save before load is blocked', () => {
@@ -44,9 +50,12 @@ test('R-32 erase removes the key and returns empty data', () => {
 });
 
 test('R-06 erase restarts numbering at 1', () => {
-  const storage = createStorage(memory());
+  const backing = memory();
+  const storage = createStorage(backing);
   storage.load();
+  storage.save(filled);
   assert.equal(storage.erase().data.nextOrderNumber, 1);
+  assert.deepEqual(createStorage(backing).load(), { ok: true, data });
 });
 
 const key = 'invoice-app';

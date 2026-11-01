@@ -137,6 +137,41 @@ test('R-20 hasValidShape refuses a duplicate id or order number', () => {
   assert.equal(hasValidShape(orders), false);
 });
 
+test('R-11 hasValidShape accepts a line with unit price 0 and a line with quantity 0', () => {
+  const free = document();
+  free.orders[0].lines[0].unitPriceCents = 0;
+  assert.equal(hasValidShape(free), true);
+  const none = document();
+  none.orders[0].lines[0].quantity = 0;
+  assert.equal(hasValidShape(none), true);
+});
+
+test('R-15 hasValidShape accepts an order whose total is exactly Number.MAX_SAFE_INTEGER', () => {
+  const doc = document();
+  doc.orders[0].lines[0].quantity = 1;
+  doc.orders[0].lines[0].unitPriceCents = Number.MAX_SAFE_INTEGER;
+  assert.equal(hasValidShape(doc), true);
+});
+
+test('R-06 hasValidShape accepts the largest nextOrderNumber that can still be incremented and refuses the next one', () => {
+  const top = document();
+  top.orders = [];
+  top.nextOrderNumber = Number.MAX_SAFE_INTEGER - 1;
+  assert.equal(hasValidShape(top), true);
+  const over = document();
+  over.orders = [];
+  over.nextOrderNumber = Number.MAX_SAFE_INTEGER;
+  assert.equal(hasValidShape(over), false);
+});
+
+test('R-20 hasValidShape accepts ids with uppercase letters and refuses a plus sign', () => {
+  const doc = document();
+  doc.customers[0].id = 'Bob1_Z-A';
+  doc.orders[0].customerId = 'Bob1_Z-A';
+  assert.equal(hasValidShape(doc), true);
+  assert.ok(refused((d) => ((d.customers[0].id = 'a+b'), (d.orders[0].customerId = 'a+b'))));
+});
+
 test('R-20 hasValidShape accepts a name of 500 characters, because form rules are not checked', () => {
   const doc = document();
   doc.customers[0].name = 'n'.repeat(500);

@@ -183,14 +183,33 @@ test('R-11 a zero-padded quantity 000005 is stored as 5 and 100000 is refused by
   }
 });
 
-test('R-01 a customer name made only of invisible characters gives the name length error', () => {
+test('R-17 R-01 a customer name made only of invisible marks (variation selector, joiner) gives the name length error', () => {
+  for (const name of ['️', '͏', '​️']) {
+    assert.equal(validateCustomer({ name }).errors[0].code, 'customer.name.length');
+  }
+});
+
+test('R-17 R-01 a customer name made only of invisible characters gives the name length error', () => {
   for (const name of ['​', ' ​﻿ ', '‍⁠']) {
     assert.equal(validateCustomer({ name }).errors[0].code, 'customer.name.length');
   }
   assert.equal(validateCustomer({ name: 'A​' }).ok, true);
 });
 
-test('R-11 a line description made only of invisible characters gives the description length error', () => {
+test('R-17 R-11 a line description made only of invisible marks gives the description length error', () => {
+  for (const description of ['️', '͏']) {
+    assert.equal(validateLine(line({ description })).errors[0].code, 'line.description.length');
+  }
+});
+
+test('R-17 R-01 an email with only invisible characters on either side of the @ gives the format error', () => {
+  for (const email of ['​@b.c', '️@b.c', '͏​@b.c', ' ​@b.c']) {
+    assert.equal(validateCustomer({ name: 'A', email }).errors[0].code, 'customer.email.format');
+  }
+  assert.equal(validateCustomer({ name: 'A', email: 'a@b.c' }).ok, true);
+});
+
+test('R-17 R-11 a line description made only of invisible characters gives the description length error', () => {
   for (const description of ['​', '​ ­']) {
     assert.equal(validateLine(line({ description })).errors[0].code, 'line.description.length');
   }

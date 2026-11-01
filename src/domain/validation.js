@@ -4,7 +4,7 @@ import { isRealDate } from './dates.js';
 const NAME_MAX = 100;
 const FIELD_MAX = 200;
 const NOTES_MAX = 500;
-const INVISIBLE_ONLY = /^[\p{Cf}\p{Z}\s]*$/u;
+const INVISIBLE_ONLY = /^[\p{Cf}\p{Z}\p{Mn}\s]*$/u;
 const QUANTITY_PATTERN = /^\d+$/;
 
 const MESSAGES = Object.freeze({
@@ -48,7 +48,8 @@ function emailError(email) {
   if (email === '') return null;
   if (email.length > FIELD_MAX) return fieldError('email', 'customer.email.length');
   const parts = email.split('@');
-  const valid = parts.length === 2 && parts[0].length > 0 && parts[1].includes('.');
+  const hasText = (part) => !INVISIBLE_ONLY.test(part);
+  const valid = parts.length === 2 && hasText(parts[0]) && hasText(parts[1]) && parts[1].includes('.');
   return valid ? null : fieldError('email', 'customer.email.format');
 }
 

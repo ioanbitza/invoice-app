@@ -1,0 +1,371 @@
+{
+  "series": 2,
+  "cycle": 1,
+  "head": "bf200b7d0df56eb120097348322f158c58fe173e",
+  "scope": "c0576d1..HEAD",
+  "commits": 18,
+  "files": [
+    "docs/MANUAL-CHECKS.md",
+    "docs/REVIEW.md",
+    "docs/decisions/ADR-004-persistence.md",
+    "docs/review/2/brief.txt",
+    "docs/review/2/decisions.json",
+    "docs/review/2/finder-contract.json",
+    "docs/review/2/finder-correctness.json",
+    "docs/review/2/finder-legal.json",
+    "docs/review/2/finder-security.json",
+    "docs/review/2/findings.json",
+    "docs/review/2/verifier-brief.txt",
+    "docs/review/2/verifier.captured.txt",
+    "docs/review/2/verifier.json",
+    "docs/review/2/verifier.txt",
+    "docs/review/state.json",
+    "src/domain/validation.js",
+    "src/ui/format.js",
+    "src/ui/main.js",
+    "src/ui/views/blocked.js",
+    "src/ui/views/customer-detail.js",
+    "src/ui/views/customer-form.js",
+    "src/ui/views/customer-list.js",
+    "src/ui/views/not-found.js",
+    "src/ui/views/order-form.js",
+    "src/ui/views/order-list.js",
+    "src/ui/views/order-view.js",
+    "styles.css",
+    "tests/export.test.js",
+    "tests/format.test.js",
+    "tests/shape.test.js",
+    "tests/storage.test.js",
+    "tests/validation.test.js"
+  ],
+  "classes": [
+    "correctness",
+    "security",
+    "contract",
+    "legal"
+  ],
+  "domainSkills": [],
+  "legalSkills": [
+    {
+      "path": "sdlc/skills/legal-data-protection/SKILL.md",
+      "file": "sdlc/skills/legal-data-protection/SKILL.md",
+      "name": "legal-data-protection",
+      "rules": [
+        "LD-01",
+        "LD-02",
+        "LD-03",
+        "LD-04",
+        "LD-05",
+        "LD-06",
+        "LD-07",
+        "LD-08",
+        "LD-09",
+        "LD-10",
+        "LD-11"
+      ],
+      "origin": "kit"
+    },
+    {
+      "path": "sdlc/skills/legal-e-invoicing/SKILL.md",
+      "file": "sdlc/skills/legal-e-invoicing/SKILL.md",
+      "name": "legal-e-invoicing",
+      "rules": [
+        "LE-01",
+        "LE-02",
+        "LE-03",
+        "LE-04",
+        "LE-05",
+        "LE-06",
+        "LE-07",
+        "LE-08"
+      ],
+      "origin": "kit"
+    },
+    {
+      "path": "sdlc/skills/legal-licenses/SKILL.md",
+      "file": "sdlc/skills/legal-licenses/SKILL.md",
+      "name": "legal-licenses",
+      "rules": [
+        "LL-01",
+        "LL-02",
+        "LL-03",
+        "LL-04",
+        "LL-05",
+        "LL-06",
+        "LL-07",
+        "LL-08",
+        "LL-09",
+        "LL-10",
+        "LL-11"
+      ],
+      "origin": "kit"
+    }
+  ],
+  "discipline": {
+    "tags": [
+      "browser",
+      "javascript",
+      "localstorage",
+      "node",
+      "storage",
+      "web-ui"
+    ],
+    "roles": {
+      "finder-correctness": [
+        "sdlc/skills/discipline-code-review/SKILL.md (CR-01 to CR-12)",
+        "sdlc/skills/discipline-coding-principles/SKILL.md (CP-01 to CP-14)",
+        "sdlc/skills/discipline-data-access/SKILL.md (DA-01 to DA-15)",
+        "sdlc/skills/discipline-errors-observability/SKILL.md (EO-01 to EO-13)",
+        "sdlc/skills/discipline-layering/SKILL.md (LY-01 to LY-12)",
+        "sdlc/skills/discipline-testing/SKILL.md (TS-01 to TS-15)",
+        "sdlc/skills/stack-javascript/SKILL.md (JS-01 to JS-18)"
+      ],
+      "finder-security": [
+        "sdlc/skills/discipline-code-review/SKILL.md (CR-01 to CR-12)",
+        "sdlc/skills/discipline-data-access/SKILL.md (DA-01 to DA-15)",
+        "sdlc/skills/discipline-devops-release/SKILL.md (DR-01 to DR-15)",
+        "sdlc/skills/discipline-errors-observability/SKILL.md (EO-01 to EO-13)",
+        "sdlc/skills/discipline-security/SKILL.md (SE-01 to SE-16)",
+        "sdlc/skills/stack-javascript/SKILL.md (JS-01 to JS-18)"
+      ],
+      "finder-contract": [
+        "sdlc/skills/discipline-code-review/SKILL.md (CR-01 to CR-12)",
+        "sdlc/skills/discipline-coding-principles/SKILL.md (CP-01 to CP-14)",
+        "sdlc/skills/discipline-data-access/SKILL.md (DA-01 to DA-15)",
+        "sdlc/skills/discipline-devops-release/SKILL.md (DR-01 to DR-15)",
+        "sdlc/skills/discipline-layering/SKILL.md (LY-01 to LY-12)",
+        "sdlc/skills/discipline-testing/SKILL.md (TS-01 to TS-15)",
+        "sdlc/skills/stack-javascript/SKILL.md (JS-01 to JS-18)"
+      ],
+      "finder-domain": [],
+      "finder-legal": [],
+      "verifier": [
+        "sdlc/skills/discipline-code-review/SKILL.md (CR-01 to CR-12)",
+        "sdlc/skills/discipline-security/SKILL.md (SE-01 to SE-16)",
+        "sdlc/skills/discipline-testing/SKILL.md (TS-01 to TS-15)",
+        "sdlc/skills/stack-javascript/SKILL.md (JS-01 to JS-18)"
+      ]
+    }
+  },
+  "author": "sonnet",
+  "startedAt": "2026-11-01T22:24:50.389Z",
+  "rendered": true,
+  "nextF": 69,
+  "previous": null,
+  "verdict": "MERGE",
+  "confirmed": [
+    {
+      "id": "COR-2",
+      "class": "correctness",
+      "severity": "advisory",
+      "file": "src/ui/views/order-view.js",
+      "line": 348,
+      "what_breaks": "The order view's delegated click listener calls ACTIONS[button.dataset.action] for every button carrying data-action. A banner shown in the page region of the order view (APP-01 from the window error listener, STO-05 from a blocked save) carries a Reload button with data-action='reload', which ACTIONS does not know, so the click throws a TypeError; the window error listener then shows a second APP-01 banner before the body listener reloads the page. The reload still happens, so the user sees only a replaced banner for an instant.",
+      "requirement": "none",
+      "evidence": "main.js:45 and :50 give STO-05 and APP-01 the action { label: 'Reload', name: 'reload' }; components.js:43 builds it with actionButton(label, 'link', spec.action.name), which sets data-action='reload' at :14. main.js:145 puts a banner in the first [data-banner-region] of the document; index.html:12-18 has none in the header, so on the order view that region is pageBanner (order-view.js:211, appended inside root at :358). A click on Reload reaches the root listener at order-view.js:345-348 before the body listener: closest('button[data-action]') finds the button, it is not disabled, ACTIONS['reload'] is undefined, so the call at :348 throws TypeError. The error reaches the window 'error' listener (main.js:292), which shows APP-01 in the same region, then the body listener (main.js:289-291) calls location.reload(). blocked.js:58-61, customer-detail.js:167-168 and customer-list.js:131-132 compare the action name first and cannot throw. Advisory: the page reloads as the button promises; only the banner flashes.",
+      "proven": true,
+      "rank": 1,
+      "level": "code",
+      "merged": [],
+      "fid": "F-64"
+    },
+    {
+      "id": "CON-1",
+      "class": "contract",
+      "severity": "advisory",
+      "file": "src/ui/views/customer-detail.js",
+      "line": 131,
+      "what_breaks": "F-35 (accepted in cycle 2) asked every view to take the shape render(container, viewModel, actions) of ADR-003 with one delegated listener per container. Two views still take the whole context with the mutable state: customer-detail.js reads state and commit from it, and order-list.js reads state, writes state.searchOrders itself and keeps a listener on the search input and on a Clear search button that is rebuilt on every search. The S12 and S13 fix commits say F-35 is fixed, so the accepted finding is half closed.",
+      "requirement": "none",
+      "rule": "JS-11",
+      "evidence": "ADR-003, Decision: 'A view has the shape render(container, viewModel, actions) and one delegated listener per container (JS-11)'. customer-detail.js:131 'export function renderCustomerDetail(container, context)', :132 destructures route, state, commit, openDialog, showBanner, deps, locale from it, :133 and :151 read state.data. order-list.js:134 'export function renderOrderList(container, context)', :135 reads context.state, :120 and :126 write state.searchOrders, :125 input.addEventListener('input', ...), :77 empty.querySelector('button').addEventListener('click', onClear) on a button that resultsPanel rebuilds at :117 on every keystroke, the case JS-11 names. main.js:72 maps customer: renderCustomerDetail and orders: renderOrderList straight to the context call at main.js:237, while the five other screens go through wrappers at main.js:75-97 that build a view model and actions. The diff of c9cc2ba (S12) changed customer-detail.js to one click listener and kept the context signature; no commit in scope touches order-list.js for F-35 (271ba2d changed only the locale line).",
+      "proven": true,
+      "rank": 2,
+      "level": "code",
+      "merged": [],
+      "fid": "F-65"
+    },
+    {
+      "id": "CON-2",
+      "class": "contract",
+      "severity": "advisory",
+      "file": "tests/shape.test.js",
+      "line": 140,
+      "what_breaks": "Two new shape tests carry requirement ids that name a form rule the test contradicts or does not cover: the title at :140 is tagged R-11 and asserts that the stored shape accepts a quantity of 0, while R-11 says a quantity is a whole number from 1 to 9 999; the title at :149 is tagged R-15 for the same storage rule. The rule both tests prove is ADR-004's 'form rules are not checked' (R-20), so a trace of R-11 or R-15 lands on tests that say the opposite of the requirement. The commit-message half of the finding is not raised: the human rejected F-41 ('a commit message is history, not rewritten').",
+      "requirement": "R-11",
+      "rule": "TS-02",
+      "evidence": "shape.test.js:140 'R-11 hasValidShape accepts a line with unit price 0 and a line with quantity 0', :144-146 set quantity = 0 and assert hasValidShape true. REQUIREMENTS.md R-11: 'a quantity that is a whole number from 1 to 9 999'. shape.test.js:149 'R-15 hasValidShape accepts an order whose total is exactly Number.MAX_SAFE_INTEGER' tests shape.js:38-40, a storage check. shape.test.js:175 names the rule these tests belong to: 'because form rules are not checked' (R-20). PLAN.md:178 S7 '**Covers:** R-06, R-19, R-20, R-21, R-32' lists neither R-11 nor R-15. TS-02: a test 'is named after the requirement id and that behaviour'. The gate's trace step passes because R-11 and R-15 are also named in money.test.js, validation.test.js and lines.test.js.",
+      "proven": true,
+      "rank": 3,
+      "level": "code",
+      "merged": [],
+      "fid": "F-66"
+    },
+    {
+      "id": "COR-3",
+      "class": "correctness",
+      "severity": "advisory",
+      "file": "tests/validation.test.js",
+      "line": 205,
+      "what_breaks": "The test title promises invisible characters 'on either side of the @', but all four cases put them before the @, and the hasText(parts[1]) term it would cover is dead code: whenever parts[1] contains the dot the next term requires, the dot (category Po) already keeps INVISIBLE_ONLY from matching, so hasText(parts[1]) is always true. The test proves only the left side and the code carries a check that changes no behaviour.",
+      "requirement": "R-17",
+      "evidence": "validation.test.js:206 cases are U+200B@b.c, U+FE0F@b.c, U+034F U+200B@b.c and ' U+200B@b.c', every invisible run before the @. validation.js:51-52: valid = parts.length === 2 && hasText(parts[0]) && hasText(parts[1]) && parts[1].includes('.'); INVISIBLE_ONLY = /^[\\p{Cf}\\p{Z}\\p{Mn}\\s]*$/u cannot match a string holding '.', so hasText(parts[1]) is true whenever includes('.') is true, and when includes('.') is false the conjunction is false whatever hasText says. The mutation run proves it: the planted defect validation.js:52 '1' -> '2' that turns hasText(parts[1]) into hasText(parts[2]) (= !INVISIBLE_ONLY.test(undefined) = !test('undefined') = true for every input) survived with every test green, while the sibling mutant on parts[1].includes was caught by the TypeError it throws. The term is therefore redundant and untested, as the finder says. Advisory: no input is accepted or refused differently.",
+      "proven": true,
+      "rank": 4,
+      "level": "code",
+      "merged": [],
+      "fid": "F-67"
+    },
+    {
+      "id": "CON-3",
+      "class": "contract",
+      "severity": "advisory",
+      "file": "tests/shape.test.js",
+      "line": 108,
+      "what_breaks": "The title of the id test still says the id rule refuses 'characters outside a-z, 0-9, - and _', while the code and the new test in this scope accept uppercase letters. The title describes a narrower rule than the one enforced and tested, so a reader of the test list learns the wrong rule.",
+      "requirement": "R-20",
+      "rule": "TS-02",
+      "evidence": "shape.test.js:108 'R-20 hasValidShape refuses an empty id, the id new and an id with characters outside a-z, 0-9, - and _'. shape.js:4 'const ID_PATTERN = /^[A-Za-z0-9_-]+$/;'. shape.test.js:167-171 'R-20 hasValidShape accepts ids with uppercase letters and refuses a plus sign' sets id 'Bob1_Z-A' and asserts hasValidShape true. Both tests pass in this run (node --test tests/shape.test.js: 24 pass), so the two titles describe two different rules for one pattern.",
+      "proven": true,
+      "rank": 5,
+      "level": "code",
+      "merged": [],
+      "fid": "F-68"
+    }
+  ],
+  "watchList": [
+    {
+      "id": "COR-4",
+      "class": "correctness",
+      "severity": "advisory",
+      "file": "src/domain/validation.js",
+      "line": 7,
+      "what_breaks": "INVISIBLE_ONLY now covers the whole Unicode class Mn (nonspacing marks). That is wider than R-17's 'zero-width or other format characters': a required field made only of combining marks that render on a dotted circle (U+0301, a Thai vowel mark) is refused as empty, although R-01 counts it as 1 character. Same root cause as CON-4.",
+      "requirement": "R-17, R-01",
+      "evidence": "validation.js:7 INVISIBLE_ONLY = /^[\\p{Cf}\\p{Z}\\p{Mn}\\s]*$/u; :43 refuses any text it matches when min > 0. For name U+0301: textOf (:34) keeps it (trim removes only whitespace), INVISIBLE_ONLY.test is true because U+0301 is Mn, so validateCustomer returns customer.name.length. The F-13 fix (accepted) wanted U+FE0F and U+034F refused, both Mn; the human did not say whether every Mn character counts as invisible. REQUIREMENTS.md R-17: 'zero-width or other format characters'.",
+      "proven": false,
+      "why_unproven": "Whether a field made only of combining marks is 'invisible' under R-17 or a valid 1-character name under R-01 is a reading of the requirement, not a fact the code settles.",
+      "how_to_settle": "The human says whether a required field made only of combining marks counts as empty. If yes, R-17 is amended to say so and validation.test.js adds U+0301 as refused; if no, S2 replaces \\p{Mn} with the explicit zero-width marks (U+034F, U+FE00 to U+FE0F, U+180B to U+180D) and adds U+0301 as accepted."
+    },
+    {
+      "id": "CON-4",
+      "class": "contract",
+      "severity": "advisory",
+      "file": "src/domain/validation.js",
+      "line": 7,
+      "what_breaks": "The empty-text check includes the whole class Mn, which also holds visible combining accents, so a required field made only of such marks is refused as empty and R-17 may not mean that. Same root cause as COR-4; one answer settles both.",
+      "requirement": "R-17",
+      "evidence": "REQUIREMENTS.md R-17: 'A text made only of invisible characters (zero-width or other format characters) counts as empty for every required field'. validation.js:7 'const INVISIBLE_ONLY = /^[\\p{Cf}\\p{Z}\\p{Mn}\\s]*$/u;'. The new tests at validation.test.js:186-190 and :199-203 feed only U+FE0F and U+034F, which are zero-width.",
+      "proven": false,
+      "why_unproven": "Two readings of R-17 both hold on its text: only zero-width and format characters, or anything with no standalone glyph. The human has decided the delete case of F-13 only, not the breadth of the class.",
+      "how_to_settle": "Same question as COR-4: the human says whether a field made only of combining accents counts as empty; the fix follows that answer in S2."
+    },
+    {
+      "id": "SEC-1",
+      "class": "security",
+      "severity": "advisory",
+      "file": "src/domain/validation.js",
+      "line": 7,
+      "what_breaks": "A customer name or line description made only of blank letters or symbols that are not format, separator or nonspacing-mark characters (U+3164 HANGUL FILLER, U+FFA0, U+115F, U+2800 BRAILLE PATTERN BLANK) still counts as text, so a customer or line is saved whose name shows as a blank row link in the list, the picker and the order list.",
+      "requirement": "R-17",
+      "rule": "SE-02",
+      "evidence": "validation.js:7 INVISIBLE_ONLY = /^[\\p{Cf}\\p{Z}\\p{Mn}\\s]*$/u; U+3164 is general category Lo and U+2800 is So, neither in the class. For name U+3164: textOf (:34) keeps it, INVISIBLE_ONLY.test is false, length 1 is within 1 to 100 (:44), so validateCustomer returns ok and the name is stored; validateLine (:112) takes the same path for a description. R-17 names 'zero-width or other format characters' only; cycle 2 F-13 left U+3164, U+2800 and U+0001 as 'a separate question for the human', and the archived decisions carry no answer.",
+      "proven": false,
+      "why_unproven": "The behaviour is proven, but R-17's letter does not cover these characters, so whether anything breaks depends on a requirement the human has not written.",
+      "how_to_settle": "The human says whether blank-rendering letters and symbols count as empty under R-17. If yes, R-17 names them, S2 adds an explicit list to INVISIBLE_ONLY and validation.test.js feeds U+3164 and U+2800 as refused; if no, the finding is closed as the letter of R-17."
+    },
+    {
+      "id": "LEG-1",
+      "class": "legal",
+      "severity": "advisory",
+      "file": "src/ui/main.js",
+      "line": 124,
+      "what_breaks": "After a customer's name or email is corrected, the text typed to find them stays in the Search customers or Search orders box; only a new customer or a delete clears a search. The box can show the old spelling with 'No customers match this search.' until the user types or reloads.",
+      "requirement": "R-02",
+      "rule": "LD-04",
+      "evidence": "Rule LD-04: 'Personal data can be corrected, and the correction reaches every place it is shown'. main.js:124 clears state.searchCustomers only when state.route.name is 'customer-new' or customerWasDeleted(nextData); :125 clears state.searchOrders only on customerWasDeleted; no branch covers 'customer-edit'. Path: type 'Jane Smiht' in Search customers, open her, correct the name to 'Jane Smith', save (commit at customer-form.js:114 lands on the detail), go back to Customers: customer-list.js:95 sets input.value = searchText = 'Jane Smiht' and searchCustomers finds nothing. ADR-005 (accepted): the search texts 'survive moving between screens and are gone after a reload'. The accepted F-43 treated the same text as a copy of the person's data for the delete case (LD-07). The archived cycle 2 decisions hold no answer for the carried LEG-10.",
+      "proven": false,
+      "why_unproven": "Whether a search box holds the user's query (ADR-005) or a copy of personal data (the F-43 reading) for a correction is a reading the human made for deletes only; the record itself is shown corrected everywhere it is displayed.",
+      "how_to_settle": "The human says whether the F-43 reading extends to a correction. If yes, commit clears both search texts when state.route.name is 'customer-edit' and MANUAL-CHECKS.md gets the R-02 line; if no, ADR-005 stands and the finding is closed."
+    }
+  ],
+  "equivalent": [
+    {
+      "file": "src/domain/customers.js",
+      "line": 4,
+      "from": "<",
+      "to": "<=",
+      "why": "compareById runs only when compareNames gave 0, and ids are unique (shape.js:81 refuses duplicate customer ids on load, deps.newId is crypto.randomUUID), so a.id === b.id never holds for two distinct customers and < and <= answer the same; Array.prototype.sort reads only the sign."
+    },
+    {
+      "file": "src/domain/customers.js",
+      "line": 4,
+      "from": "1",
+      "to": "2",
+      "why": "-1 became -2: Array.prototype.sort reads only the sign of the comparator, so every order it produces is unchanged."
+    },
+    {
+      "file": "src/domain/customers.js",
+      "line": 4,
+      "from": ">",
+      "to": ">=",
+      "why": "With unique ids the two operands are never equal, so > and >= give the same answer for every pair the sort passes."
+    },
+    {
+      "file": "src/domain/customers.js",
+      "line": 4,
+      "from": "1",
+      "to": "2",
+      "why": "-1 became -2: Array.prototype.sort reads only the sign of the comparator, so every order it produces is unchanged."
+    },
+    {
+      "file": "src/domain/customers.js",
+      "line": 4,
+      "from": "0",
+      "to": "1",
+      "why": "The 0 branch is reached only when a.id === b.id, which unique ids rule out for two distinct customers; the sort never compares an element with itself, so the value is never returned."
+    },
+    {
+      "file": "src/domain/lines.js",
+      "line": 20,
+      "from": "+",
+      "to": "-",
+      "why": "sumIsExact only tests Number.isSafeInteger(sum); subtracting every line total from 0 gives the exact negation of the sum, isSafeInteger is symmetric in sign, and lineTotalCents still throws on an unsafe product, so the answer is identical for every input."
+    },
+    {
+      "file": "src/domain/orders.js",
+      "line": 15,
+      "from": "<",
+      "to": "<=",
+      "why": "The line runs only inside if (a.date !== b.date), so the two date strings are never equal and < and <= give the same answer."
+    },
+    {
+      "file": "src/domain/validation.js",
+      "line": 52,
+      "from": "1",
+      "to": "2",
+      "why": "The surviving mutant is hasText(parts[1]) -> hasText(parts[2]) (the sibling on parts[1].includes throws a TypeError and was caught). hasText(parts[2]) is !INVISIBLE_ONLY.test(undefined) = !test('undefined') = true, and the original hasText(parts[1]) is also true whenever parts[1].includes('.') holds, because '.' is category Po and outside the class; when includes('.') is false both versions are false. The term is dead code, which is COR-3."
+    },
+    {
+      "file": "src/storage/shape.js",
+      "line": 39,
+      "from": "+",
+      "to": "-",
+      "why": "hasSafeTotal only tests Number.isSafeInteger of the reduce result; subtracting every line total from 0 gives the exact negation and isSafeInteger is symmetric in sign, so the answer is identical for every input."
+    },
+    {
+      "file": "src/storage/shape.js",
+      "line": 44,
+      "from": "0",
+      "to": "1",
+      "why": "The fallback is returned only when ORDER_NUMBER does not match. hasCanonicalNumber (:49) then compares order.number with 'ORD-' plus the padded value, which a string that failed /^ORD-(\\d{4,})$/ can never equal whatever the value, so it stays false; hasValidLinks (:86) runs only after data.orders.every(isOrder) passed (:103-104), when every number matches, so the fallback never decides the result."
+    }
+  ],
+  "maxIds": {
+    "COR": 5,
+    "SEC": 2,
+    "CON": 4,
+    "LEG": 4
+  },
+  "renderedAt": "2026-11-01T22:44:15.963Z"
+}
